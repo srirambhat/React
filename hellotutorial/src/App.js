@@ -1,9 +1,23 @@
 import './Index.css';
 import Employee from './Components/Employee';
 import { useState } from 'react';
+import {v4 as uuidv4} from 'uuid';
 
 function App() {
   const [role, setRol] = useState('idk');
+  const [employees, setEmployees] = useState (
+    [
+      {name: "Sriram Bhat", role : role, img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+      {name: "Maithri Bhat", role : "Mom", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+      {name: "Tushar Bhat", role : "Son", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+      {name: "Pranati Bhat", role : "Daughter", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+      {name: "Sriram Bhat", role : "Dad", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+      {name: "Maithri Bhat", role : "Mom", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+      {name: "Tushar Bhat", role : "Son", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+      {name: "Pranati Bhat", role : "Daughter", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+    ]
+  );
+
   console.log('We are about to list the employee');
   const showEmployees = true;
   return (
@@ -19,13 +33,17 @@ function App() {
           }
         />
         <div className = "flex flex-wrap justify-center">
-          <Employee name = "Sriram Bhat" role ={role} img="https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"/>
-          <Employee name = "Maithri Bhat" role="Mom" img="https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"/>
-          <Employee name = "Tushar Bhat" role="Son" img="https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"/>
-          <Employee name = "Pranati Bhat" img="https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"/>
-          <Employee name = "Sriram Bhat" role ={role} img="https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"/>
-          <Employee name = "Maithri Bhat" role="Mom" img="https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"/>
-          <Employee name = "Tushar Bhat" role="Son" img="https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"/>
+          { employees.map((employee) => {
+              console.log(employee);
+              return (<Employee 
+                        //id={employee.id}
+                        key = {uuidv4()}
+                        name={employee.name} 
+                        role={employee.role} 
+                        img={employee.img} 
+                      />
+                    );
+          })}
         </div>
       </>
     )  : (
