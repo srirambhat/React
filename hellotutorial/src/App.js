@@ -10,10 +10,10 @@ function App() {
       { showEmployees ? (
       <>
       
-          <Employee />
-          <Employee />
-          <Employee />
-          <Employee />
+          <Employee name = "Sriram Bhat" role ="Dad"/>
+          <Employee name = "Maithri Bhat" role="Mom"/>
+          <Employee name = "Tushar Bhat" role="Son"/>
+          <Employee name = "Pranati Bhat" />
         </>
       )  : (
         <p> You cannot see the employee</p>
