@@ -3,6 +3,7 @@ import Employee from './Components/Employee';
 import { useState } from 'react';
 import {v4 as uuidv4} from 'uuid';
 import AddEmployee from './Components/AddEmployee';
+import EditEmployee from './Components/EditEmployee';
 
 function App() {
   const [role, setRole] = useState('idk');
@@ -59,13 +60,26 @@ function App() {
         />
         <div className = "flex flex-wrap justify-center">
           { employees.map((employee) => {
+              const editEmployee = (
+                <EditEmployee
+                  id={employee.id}
+                  key = {employee.id}
+                  name={employee.name} 
+                  role={employee.role} 
+                  img={employee.img} 
+                  updateEmployee={updateEmployee}
+                />
+              );
               return (<Employee 
                         id={employee.id}
                         key = {employee.id}
                         name={employee.name} 
                         role={employee.role} 
                         img={employee.img} 
-                        updateEmployee={updateEmployee}
+                        editEmployee={editEmployee}
+
+                        // First way of sending the pointer to the function to call instead of the const above
+                        //updateEmployee={updateEmployee}   
                       />
                     );
           })}
