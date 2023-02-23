@@ -7,16 +7,30 @@ function App() {
   const [role, setRole] = useState('idk');
   const [employees, setEmployees] = useState (
     [
-      {name: "Sriram Bhat", role : role, img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
-      {name: "Maithri Bhat", role : "Mom", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
-      {name: "Tushar Bhat", role : "Son", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
-      {name: "Pranati Bhat", role : "Daughter", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
-      {name: "Sriram Bhat", role : "Dad", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
-      {name: "Maithri Bhat", role : "Mom", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
-      {name: "Tushar Bhat", role : "Son", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
-      {name: "Pranati Bhat", role : "Daughter", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+      {id: 1, name: "Sriram Bhat", role : role, img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+      {id: 2, name: "Maithri Bhat", role : "Mom", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+      {id: 3, name: "Tushar Bhat", role : "Son", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+      {id: 5, name: "Pranati Bhat", role : "Daughter", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+      {id: 6, name: "Sriram Bhat", role : "Dad", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+      {id: 7, name: "Maithri Bhat", role : "Mom", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+      {id: 8, name: "Tushar Bhat", role : "Son", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
+      {id: 9, name: "Pranati Bhat", role : "Daughter", img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
     ]
   );
+
+  function updateEmployee (id, newName, newRole, newImg)
+  {
+    const updateEmployees = employees.map((employee) => {
+      if (id == employee.id) {
+        return {...employee, name: newName, role: newRole, img: newImg};
+      }
+
+      return employee;
+    });
+
+    setEmployees(updateEmployees);
+  }
+
 
   console.log('We are about to list the employee');
   const showEmployees = true;
@@ -34,13 +48,13 @@ function App() {
         />
         <div className = "flex flex-wrap justify-center">
           { employees.map((employee) => {
-              console.log(employee);
               return (<Employee 
-                        //id={employee.id}
-                        key = {uuidv4()}
+                        id={employee.id}
+                        key = {employee.id}
                         name={employee.name} 
                         role={employee.role} 
                         img={employee.img} 
+                        updateEmployee={updateEmployee}
                       />
                     );
           })}
