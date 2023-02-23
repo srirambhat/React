@@ -1,12 +1,13 @@
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { NavLink } from 'react-router-dom'
 
 const navigation = [
   { name: 'Employees', href: '/Employees', current: true },
   { name: 'Customers', href: '/Customers', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
+  { name: 'Projects', href: '/other', current: false },
+  { name: 'Calendar', href: '/other2', current: false },
 ]
 
 function classNames(...classes) {
@@ -47,11 +48,9 @@ export default function Header(props) {
                   />
                 </div>
                 */}
-
-                <div className="hidden sm:ml-6 sm:block">
-                  <div className="flex space-x-4">
-                    {navigation.map((item) => (
-                      <a
+                {/*
+                use this in place of NavLink below.
+                <a
                         key={item.name}
                         href={item.href}
                         className={classNames(
@@ -62,6 +61,22 @@ export default function Header(props) {
                       >
                         {item.name}
                       </a>
+                */}
+                <div className="hidden sm:ml-6 sm:block">
+                  <div className="flex space-x-4">
+                    {navigation.map((item) => (
+                      <NavLink
+                        key={item.name}
+                        to={item.href}
+                        
+                        className={({isActive}) => {
+                          return 'px-3 py-2 rounded-md text-sm font-medium no-underline ' +
+                              (!isActive ? 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                        : 'bg-gray-900 text-white')
+                        }}
+                      >
+                        {item.name}
+                      </NavLink>
                     ))}
                   </div>
                 </div>
