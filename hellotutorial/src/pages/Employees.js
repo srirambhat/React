@@ -48,7 +48,7 @@ function Employees() {
   console.log('We are about to list the employee');
   const showEmployees = true;
   return (
-    <div className="App bg-blue-200 min-h-screen ">
+    <div className="">
       
       {console.log('inside the return')}
       { showEmployees ? (
@@ -63,7 +63,7 @@ function Employees() {
         />
         */}
 
-        <div className = "flex flex-wrap justify-center my-2">
+        <div className = "flex flex-wrap justify-center ">
           { employees.map((employee) => {
               const editEmployee = (
                 <EditEmployee
