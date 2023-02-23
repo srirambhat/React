@@ -4,7 +4,7 @@ import { useState } from 'react';
 import {v4 as uuidv4} from 'uuid';
 
 function App() {
-  const [role, setRol] = useState('idk');
+  const [role, setRole] = useState('idk');
   const [employees, setEmployees] = useState (
     [
       {name: "Sriram Bhat", role : role, img : "https://images.pexels.com/photos/3291250/pexels-photo-3291250.jpeg"},
@@ -28,7 +28,7 @@ function App() {
           <input type="text"
             onChange={(e) => {
               console.log(e.target.value);
-              setRol(e.target.value);
+              setRole(e.target.value);
             } 
           }
         />
@@ -46,7 +46,7 @@ function App() {
           })}
         </div>
       </>
-    )  : (
+    ) : (
         <p> You cannot see the employee</p>
       )}
     </div>
