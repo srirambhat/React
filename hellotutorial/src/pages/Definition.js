@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { useParams, useNavigate, Link } from "react-router-dom";
 import NotFound from "../Components/NotFound";
+import { resolveConfig } from "prettier";
 
 export default function Definition() {
     const [word, setWord] = useState();
@@ -11,20 +12,36 @@ export default function Definition() {
     let { search } = useParams();
     const navigate = useNavigate();
     const [notFound, setNotfound] = useState(false);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
-        fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + search)
+        //const url = 'https://httpstat.us/501';
+        const url = 'https://api.dictionaryapi.dev/api/v2/entries/en/' + search;
+        fetch(url)
             .then((response) => {
+                console.log(response.status);
+
                 if (response.status === 404) {
                     //navigate('/404');
                     setNotfound(true);
+                } else if (response.status === 401) {
+                    navigate('/login');
+                } else if (response.status === 500) {
+                    navigate('/servererror');
                 }
 
+                if (!response.ok) {
+                    setError(true)
+                    throw new Error('Something went wrong');
+                }
                 return response.json()
             })
             .then((data) => {
                 setWord(data[0].meanings);
                 console.log(data[0].meanings);
+            })
+            .catch((e) => {
+                console.log(e.message);
             });
     }, []);
 
@@ -32,6 +49,16 @@ export default function Definition() {
         return (
             <>
                 <NotFound />
+                <Link to="/dictionary">Search another</Link>
+            </>
+
+        );
+    }
+
+    if (error === true) {
+        return (
+            <>
+                <p>Something went wrong, try again ?</p>
                 <Link to="/dictionary">Search another</Link>
             </>
 
