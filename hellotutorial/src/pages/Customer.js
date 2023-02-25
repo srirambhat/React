@@ -6,7 +6,35 @@ export default function Customer() {
     const { id } = useParams();
     const [customer, setCustomer] = useState();
     const [notFound, setNotFound] = useState();
+    const [tempCustomer, setTempCustomer] = useState();
+    const [changed, setChanged] = useState(false);
+    const [error, setError] = useState();
+
     const navigate = useNavigate();
+
+    useEffect(() => {
+        //console.log('customer:', customer);
+        //console.log('tempCustomer:', tempCustomer);
+        //console.log('changed: ', changed);
+        if (!customer) return;
+        if (!tempCustomer) return;
+
+        let isEqual = true;
+
+        if (customer.name !== tempCustomer.name) {
+            isEqual = false;
+        }
+        if (customer.industry !== tempCustomer.industry) {
+            isEqual = false;
+        }
+
+        if (isEqual) {
+            setChanged(false);
+        }
+        if (error && isEqual) {
+            setError(undefined);
+        }
+    }, []);
 
     useEffect(() => {
         console.log('useEffect');
@@ -21,12 +49,47 @@ export default function Customer() {
                     // render a 404 component in this page for more clarity
                     setNotFound(true);
                 }
+                if (!response.ok) {
+                    console.log(response);
+                    throw new Error('Something went wrong, try again later');
+                }
                 return response.json();
             })
             .then((data) => {
                 setCustomer(data.customer);
+                setTempCustomer(data.customer);
+                setError(undefined);
+            })
+            .catch((e) => {
+                setError(e.message);
             });
     }, []);
+
+    function updateCustomer() {
+        const url = baseUrl + '/api/customers/' + id;
+
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(tempCustomer),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Something went wrong');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setCustomer(data.customer);
+                setChanged(false);
+                console.log(data);
+                setError(undefined);
+            })
+            .catch((e) => {
+                console.log(e.Error);
+                setError(e.message);
+            });
+    }
 
     return (
         <>
@@ -35,36 +98,83 @@ export default function Customer() {
                 <>
                     <h1>Name of Customer: </h1>
                     <div>
-                        <p> {customer.id}</p>
-                        <p> {customer.name}</p>
-                        <p> {customer.industry}</p>
+                        <p class="m-2 block px-2">ID: {tempCustomer.id}</p>
+                        <input
+                            class="m-2 block px-2"
+                            type="text"
+                            value={tempCustomer.name}
+                            onChange={(e) => {
+                                setChanged(true);
+                                setTempCustomer({
+                                    ...tempCustomer,
+                                    name: e.target.value,
+                                });
+                            }}
+                        />
+
+                        <input
+                            class="m-2 block px-2"
+                            type="text"
+                            value={tempCustomer.industry}
+                            onChange={(e) => {
+                                setChanged(true);
+                                setTempCustomer({
+                                    ...tempCustomer,
+                                    industry: e.target.value,
+                                });
+                            }}
+                        />
                     </div>
+                    {changed ? (
+                        <>
+                            <button
+                                className="m-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline"
+                                onClick={(e) => {
+                                    setTempCustomer({ ...customer });
+                                    setChanged(false);
+                                }}
+                            >
+                                Cancel
+                            </button>{' '}
+                            <button
+                                className="m-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline"
+                                onClick={updateCustomer}
+                            >
+                                Save
+                            </button>
+                        </>
+                    ) : null}
+
+                    <button
+                        className="m-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline"
+                        onClick={(e) => {
+                            const url = baseUrl + 'api/customers/' + id;
+
+                            fetch(url, {
+                                method: 'DELETE',
+                                headers: { 'Content-Type': 'application/json' },
+                            })
+                                .then((response) => {
+                                    if (!response.ok) {
+                                        throw new Error('Something went wrong');
+                                    }
+
+                                    // assume things went well
+                                    navigate('/customers');
+                                    //return response.json()
+                                })
+                                .catch((e) => {
+                                    console.log(e);
+                                    //setError(e.message);
+                                });
+                        }}
+                    >
+                        Delete
+                    </button>
                 </>
             ) : null}
-            <button
-                onClick={(e) => {
-                    const url = baseUrl + 'api/customers/' + id;
-
-                    fetch(url, {
-                        method: 'DELETE',
-                        headers: { 'Content-Type': 'application/json' },
-                    })
-                        .then((response) => {
-                            if (!response.ok) {
-                                throw new Error('Something went wrong');
-                            }
-                            // assume things went well
-                            navigate('/customers');
-                            //return response.json()
-                        })
-                        .catch((e) => {
-                            console.log(e);
-                        });
-                }}
-            >
-                Delete
-            </button>
-            <br></br>
+            {error ? <p>{error}</p> : null}
+            <br />
             <Link to="/customers">Go back</Link>
         </>
     );

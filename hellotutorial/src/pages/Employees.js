@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import AddEmployee from '../Components/AddEmployee';
 import EditEmployee from '../Components/EditEmployee';
-import Header from '../Components/Header';
 
 function Employees() {
     const [role, setRole] = useState('idk');
@@ -94,14 +93,14 @@ function Employees() {
             {showEmployees ? (
                 <>
                     {/*
-          <input type="text"
-            onChange={(e) => {
-              console.log(e.target.value);
-              setRole(e.target.value);
-            } 
-          }
-        />
-        */}
+                      <input type="text"
+                        onChange={(e) => {
+                          console.log(e.target.value);
+                          setRole(e.target.value);
+                        } 
+                      }
+                      />
+                  */}
 
                     <div className="flex flex-wrap justify-center ">
                         {employees.map((employee) => {

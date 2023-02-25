@@ -1,10 +1,7 @@
-import { data } from 'autoprefixer';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import NotFound from '../Components/NotFound';
-import { resolveConfig } from 'prettier';
-import Dictionary from '../pages/Dictionary';
 import DefinitionSearch from '../Components/DefinitionSearch';
 
 export default function Definition() {
