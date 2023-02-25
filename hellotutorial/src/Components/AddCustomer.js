@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { Link } from 'react-router-dom';
 
-function AddEmployee(props) {
+export default function AddCustomer(props) {
     const [name, setName] = useState('');
-    const [role, setRole] = useState('');
-    const [img, setImage] = useState('');
+    const [industry, setIndustry] = useState('');
 
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(props.show);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -16,32 +16,31 @@ function AddEmployee(props) {
         <>
             <button
                 variant="primary"
-                onClick={handleShow}
+                onClick={props.toggleShow}
                 className="block mx-auto m-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-                +Add Employee
+                +Add Customer
             </button>
 
             <Modal
-                show={show}
+                show={props.show}
                 onHide={handleClose}
                 backdrop="static"
                 keyboard={false}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Add Employee</Modal.Title>
+                    <Modal.Title>Add Customer</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <form
                         onSubmit={(e) => {
                             handleClose();
                             e.preventDefault();
-                            console.log('Hello from Edit Employee onSubmit');
-                            console.log(props.id, name, role);
+                            console.log('Hello from Edit Customer onSubmit');
+                            console.log(props.id, name, industry);
                             setName('');
-                            setRole('');
-                            setImage('');
-                            props.newEmployee(name, role, img);
+                            setIndustry('');
+                            props.newCustomer(name, industry);
                         }}
                         id="editModal"
                         className="w-full max-w-sm"
@@ -52,14 +51,14 @@ function AddEmployee(props) {
                                     className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
                                     for="name"
                                 >
-                                    Full Name
+                                    Customer Name
                                 </label>
                             </div>
                             <div className="md:w-2/3">
                                 <input
                                     className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
                                     id="name"
-                                    placeholder="John Doe"
+                                    placeholder="Google"
                                     type="text"
                                     value={name}
                                     onChange={(e) => {
@@ -73,43 +72,20 @@ function AddEmployee(props) {
                             <div className="md:w-1/3">
                                 <label
                                     className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
-                                    for="role"
+                                    for="industry"
                                 >
-                                    Role
+                                    Industry
                                 </label>
                             </div>
                             <div className="md:w-2/3">
                                 <input
                                     className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                    id="role"
-                                    placeholder="Bank Teller"
+                                    id="industry"
+                                    placeholder="Manufacturing"
                                     type="text"
-                                    value={role}
+                                    value={industry}
                                     onChange={(e) => {
-                                        setRole(e.target.value);
-                                    }}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="md:flex md:items-center mb-6">
-                            <div className="md:w-1/3">
-                                <label
-                                    className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4"
-                                    for="img"
-                                >
-                                    Image
-                                </label>
-                            </div>
-                            <div className="md:w-2/3">
-                                <input
-                                    className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                                    id="img"
-                                    placeholder="https://images.pexels.com/photos/206359/pexels-photo-206359.jpeg"
-                                    type="text"
-                                    value={img}
-                                    onChange={(e) => {
-                                        setImage(e.target.value);
+                                        setIndustry(e.target.value);
                                     }}
                                 />
                             </div>
@@ -125,7 +101,7 @@ function AddEmployee(props) {
                     </button>
                     <button
                         className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        onClick={handleClose}
+                        onClick={props.toggleShow}
                     >
                         Close
                     </button>
@@ -134,5 +110,3 @@ function AddEmployee(props) {
         </>
     );
 }
-
-export default AddEmployee;

@@ -1,11 +1,11 @@
-import { data } from "autoprefixer";
-import { useEffect, useState } from "react";
+import { data } from 'autoprefixer';
+import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useParams, useNavigate, Link } from "react-router-dom";
-import NotFound from "../Components/NotFound";
-import { resolveConfig } from "prettier";
-import Dictionary from "../pages/Dictionary";
-import DefinitionSearch from "../Components/DefinitionSearch";
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import NotFound from '../Components/NotFound';
+import { resolveConfig } from 'prettier';
+import Dictionary from '../pages/Dictionary';
+import DefinitionSearch from '../Components/DefinitionSearch';
 
 export default function Definition() {
     const [word, setWord] = useState();
@@ -33,10 +33,10 @@ export default function Definition() {
                 }
 
                 if (!response.ok) {
-                    setError(true)
+                    setError(true);
                     throw new Error('Something went wrong');
                 }
-                return response.json()
+                return response.json();
             })
             .then((data) => {
                 setWord(data[0].meanings);
@@ -53,7 +53,6 @@ export default function Definition() {
                 <NotFound />
                 <Link to="/dictionary">Search another</Link>
             </>
-
         );
     }
 
@@ -63,7 +62,6 @@ export default function Definition() {
                 <p>Something went wrong, try again ?</p>
                 <Link to="/dictionary">Search another</Link>
             </>
-
         );
     }
 
@@ -83,9 +81,7 @@ export default function Definition() {
                     <p>Search Again: </p>
                     <DefinitionSearch />
                 </>
-
-            ) : null
-            }
+            ) : null}
         </>
     );
 }

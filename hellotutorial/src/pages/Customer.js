@@ -1,7 +1,6 @@
-import { Link, useParams, Navigate, useNavigate } from "react-router-dom"
-import { useEffect, useState } from "react";
-import NotFound from "../Components/NotFound";
-import { baseUrl } from "../shared";
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { baseUrl } from '../shared';
 
 export default function Customer() {
     const { id } = useParams();
@@ -26,13 +25,12 @@ export default function Customer() {
             })
             .then((data) => {
                 setCustomer(data.customer);
-            })
-
+            });
     }, []);
 
     return (
         <>
-            {notFound ? <p>The customer with id {id}  is not found</p> : null}
+            {notFound ? <p>The customer with id {id} is not found</p> : null}
             {customer ? (
                 <>
                     <h1>Name of Customer: </h1>
@@ -42,9 +40,32 @@ export default function Customer() {
                         <p> {customer.industry}</p>
                     </div>
                 </>
-            ) : null
-            }
-            <Link to='/customers'>Go back</Link>
+            ) : null}
+            <button
+                onClick={(e) => {
+                    const url = baseUrl + 'api/customers/' + id;
+
+                    fetch(url, {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' },
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error('Something went wrong');
+                            }
+                            // assume things went well
+                            navigate('/customers');
+                            //return response.json()
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                        });
+                }}
+            >
+                Delete
+            </button>
+            <br></br>
+            <Link to="/customers">Go back</Link>
         </>
-    )
+    );
 }

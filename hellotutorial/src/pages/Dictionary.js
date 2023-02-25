@@ -1,4 +1,4 @@
-import DefinitionSearch from "../Components/DefinitionSearch"
+import DefinitionSearch from '../Components/DefinitionSearch';
 
 export default function Dictionary() {
     return (
