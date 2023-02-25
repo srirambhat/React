@@ -13,20 +13,19 @@ export default function Customer() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        //console.log('customer:', customer);
-        //console.log('tempCustomer:', tempCustomer);
-        //console.log('changed: ', changed);
         if (!customer) return;
         if (!tempCustomer) return;
 
         let isEqual = true;
 
-        if (customer.name !== tempCustomer.name) {
-            isEqual = false;
-        }
-        if (customer.industry !== tempCustomer.industry) {
-            isEqual = false;
-        }
+        console.log('customer:', customer);
+        console.log('tempCustomer:', tempCustomer);
+        console.log('changed: ', changed);
+
+        if (customer.name !== tempCustomer.name) isEqual = false;
+        if (customer.industry !== tempCustomer.industry) isEqual = false;
+
+        console.log('isEqual: ', isEqual);
 
         if (isEqual) {
             setChanged(false);
@@ -34,7 +33,7 @@ export default function Customer() {
         if (error && isEqual) {
             setError(undefined);
         }
-    }, []);
+    });
 
     useEffect(() => {
         console.log('useEffect');
@@ -65,7 +64,8 @@ export default function Customer() {
             });
     }, []);
 
-    function updateCustomer() {
+    function updateCustomer(e) {
+        e.preventDefault();
         const url = baseUrl + '/api/customers/' + id;
 
         fetch(url, {
@@ -98,32 +98,35 @@ export default function Customer() {
                 <>
                     <h1>Name of Customer: </h1>
                     <div>
-                        <p class="m-2 block px-2">ID: {tempCustomer.id}</p>
-                        <input
-                            class="m-2 block px-2"
-                            type="text"
-                            value={tempCustomer.name}
-                            onChange={(e) => {
-                                setChanged(true);
-                                setTempCustomer({
-                                    ...tempCustomer,
-                                    name: e.target.value,
-                                });
-                            }}
-                        />
+                        <form id="formCustomerId" onSubmit={updateCustomer}>
+                            <p class="m-2 block px-2">ID: {tempCustomer.id}</p>
 
-                        <input
-                            class="m-2 block px-2"
-                            type="text"
-                            value={tempCustomer.industry}
-                            onChange={(e) => {
-                                setChanged(true);
-                                setTempCustomer({
-                                    ...tempCustomer,
-                                    industry: e.target.value,
-                                });
-                            }}
-                        />
+                            <input
+                                class="m-2 block px-2"
+                                type="text"
+                                value={tempCustomer.name}
+                                onChange={(e) => {
+                                    setChanged(true);
+                                    setTempCustomer({
+                                        ...tempCustomer,
+                                        name: e.target.value,
+                                    });
+                                }}
+                            />
+
+                            <input
+                                class="m-2 block px-2"
+                                type="text"
+                                value={tempCustomer.industry}
+                                onChange={(e) => {
+                                    setChanged(true);
+                                    setTempCustomer({
+                                        ...tempCustomer,
+                                        industry: e.target.value,
+                                    });
+                                }}
+                            />
+                        </form>
                     </div>
                     {changed ? (
                         <>
@@ -137,8 +140,9 @@ export default function Customer() {
                                 Cancel
                             </button>{' '}
                             <button
+                                form="formCustomerId"
                                 className="m-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline"
-                                onClick={updateCustomer}
+                                //                                onClick={updateCustomer}
                             >
                                 Save
                             </button>
