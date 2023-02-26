@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import AddCustomer from '../Components/AddCustomer';
 import { baseUrl } from '../shared';
 import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { login } from '../pages/Login';
+import { LoginContext } from '../App';
 
 export default function Customers() {
     const [customers, setCustomers] = useState();
@@ -10,6 +11,7 @@ export default function Customers() {
 
     const navigate = useNavigate();
     const location = useLocation();
+    const [loggedIn, setLoggedIn] = useContext(LoginContext);
 
     function toggleShow() {
         setShow(!show);
@@ -28,6 +30,7 @@ export default function Customers() {
                 console.log(response.status);
 
                 if (response.status === 401) {
+                    setLoggedIn(false);
                     navigate('/login', {
                         state: {
                             previousUrl: location.pathname,
