@@ -10,6 +10,7 @@ import NotFound from './Components/NotFound';
 import Login from './pages/Login';
 import { createContext, useEffect, useState } from 'react';
 import { baseUrl } from './shared';
+import Register from './pages/Register';
 
 export const LoginContext = createContext();
 
@@ -71,6 +72,7 @@ export default function App() {
                             element={<Definition />}
                         />
                         <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
                         <Route path="/404" element={<NotFound />} />
                         <Route path="/*" element={<NotFound />} />
                     </Routes>
