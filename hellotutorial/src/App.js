@@ -8,11 +8,45 @@ import Dictionary from './pages/Dictionary';
 import Definition from './pages/Definition';
 import NotFound from './Components/NotFound';
 import Login from './pages/Login';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
+import { baseUrl } from './shared';
 
 export const LoginContext = createContext();
 
 export default function App() {
+    function refreshTokens() {
+        if (localStorage.refresh) {
+            const url = baseUrl + 'api/token/refresh/';
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    refresh: localStorage.refresh,
+                }),
+            })
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    console.log(data);
+                    localStorage.access = data.access;
+                    localStorage.refresh = data.refresh;
+                    setLoggedIn(true);
+                })
+                .catch((e) => {
+                    console(e.message);
+                });
+        }
+    }
+
+    useEffect(() => {
+        const minutes = 1000 * 60;
+        refreshTokens();
+        setInterval(refreshTokens, minutes * 3);
+    }, []);
+
     const [loggedIn, setLoggedIn] = useState(
         localStorage.access ? true : false
     );
