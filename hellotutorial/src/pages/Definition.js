@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import NotFound from '../Components/NotFound';
 import DefinitionSearch from '../Components/DefinitionSearch';
 
@@ -12,6 +12,7 @@ export default function Definition() {
     const navigate = useNavigate();
     const [notFound, setNotfound] = useState(false);
     const [error, setError] = useState(false);
+    const location = useLocation();
 
     useEffect(() => {
         //const url = 'https://httpstat.us/501';
@@ -24,7 +25,7 @@ export default function Definition() {
                     //navigate('/404');
                     setNotfound(true);
                 } else if (response.status === 401) {
-                    navigate('/login');
+                    //navigate('/login');
                 } else if (response.status === 500) {
                     navigate('/servererror');
                 }

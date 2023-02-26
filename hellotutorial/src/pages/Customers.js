@@ -1,22 +1,21 @@
 import { useEffect, useState } from 'react';
 import AddCustomer from '../Components/AddCustomer';
 import { baseUrl } from '../shared';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { login } from '../pages/Login';
 
 export default function Customers() {
     const [customers, setCustomers] = useState();
     const [show, setShow] = useState(false);
 
+    const navigate = useNavigate();
+    const location = useLocation();
+
     function toggleShow() {
         setShow(!show);
     }
 
-    const navigate = useNavigate();
-
     useEffect(() => {
-        //const url = 'https://httpstat.us/501';
-        //const url = 'https://api.dictionaryapi.dev/api/v2/entries/en/' + search;
         const url = baseUrl + 'api/customers/';
 
         fetch(url, {
@@ -29,7 +28,11 @@ export default function Customers() {
                 console.log(response.status);
 
                 if (response.status === 401) {
-                    navigate('/login');
+                    navigate('/login', {
+                        state: {
+                            previousUrl: location.pathname,
+                        },
+                    });
                 }
                 if (!response.ok) {
                     throw new Error('Something went wrong');
