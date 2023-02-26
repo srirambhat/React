@@ -39,14 +39,22 @@ export default function Customer() {
         console.log('useEffect');
         const url = baseUrl + 'api/customers/' + id;
 
-        fetch(url)
+        fetch(url, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + localStorage.getItem('access'),
+            },
+        })
             .then((response) => {
+                console.log(response.status);
                 if (response.status === 404) {
                     // redirect to a 404 page (new URL)
                     // navigate('/404');
                     // or
                     // render a 404 component in this page for more clarity
                     setNotFound(true);
+                } else if (response.status === 401) {
+                    navigate('/login');
                 }
                 if (!response.ok) {
                     console.log(response);
@@ -70,10 +78,17 @@ export default function Customer() {
 
         fetch(url, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + localStorage.getItem('access'),
+            },
             body: JSON.stringify(tempCustomer),
         })
             .then((response) => {
+                if (response.status === 401) {
+                    navigate('/login');
+                }
+
                 if (!response.ok) {
                     throw new Error('Something went wrong');
                 }
@@ -186,9 +201,15 @@ export default function Customer() {
                                     method: 'DELETE',
                                     headers: {
                                         'Content-Type': 'application/json',
+                                        Authorization:
+                                            'Bearer ' +
+                                            localStorage.getItem('access'),
                                     },
                                 })
                                     .then((response) => {
+                                        if (response.status === 401) {
+                                            navigate('/login');
+                                        }
                                         if (!response.ok) {
                                             throw new Error(
                                                 'Something went wrong'
