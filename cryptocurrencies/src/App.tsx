@@ -5,9 +5,47 @@ import axios from 'axios';
 import CryptoSummary from './Components/CryptoSummary';
 import { Crypto } from './Types';
 
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+import type { ChartData, ChartOptions } from 'chart.js';
+import moment from 'moment';
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
+
 function App() {
     const [cryptos, setCryptos] = useState<Crypto[] | null>(null);
     const [selected, setSelected] = useState<Crypto | null>();
+    const [range, setRange] = useState<number>(30);
+    const [data, setData] = useState<ChartData<'line'>>();
+    const [options, setOptions] = useState<ChartOptions<'line'>>({
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false,
+            },
+            title: {
+                display: true,
+                text: 'Chart.js Line Chart',
+            },
+        },
+    });
 
     useEffect(() => {
         const url =
@@ -18,6 +56,52 @@ function App() {
             setCryptos(response.data);
         });
     }, []);
+
+    useEffect(() => {
+        if (!selected) return;
+        axios
+            .get(
+                `https://api.coingecko.com/api/v3/coins/${selected?.id}}/market_chart?vs_currency=usd&days=${range}&{range === 1 ? 'interval=hourly': 'interval=daily'
+              }`
+            )
+            .then((response) => {
+                console.log(response.data);
+                setData({
+                    labels: response.data.prices.map((price: number[]) => {
+                        return moment
+                            .unix(price[0] / 1000)
+                            .format(range === 1 ? 'HH-MM' : 'MM-DD');
+                    }),
+                    datasets: [
+                        {
+                            label: 'Dataset 1',
+                            data: response.data.prices.map(
+                                (price: number[]) => {
+                                    return price[1];
+                                }
+                            ),
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        },
+                    ],
+                });
+                setOptions({
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false,
+                        },
+                        title: {
+                            display: true,
+                            text:
+                                `${selected?.name}Price over last ` +
+                                range +
+                                (range === 1 ? `day` : `days`),
+                        },
+                    },
+                });
+            });
+    }, [selected, range]);
 
     return (
         <>
@@ -41,8 +125,22 @@ function App() {
                           })
                         : null}
                 </select>
+                <select
+                    onChange={(e) => {
+                        setRange(parseInt(e.target.value));
+                    }}
+                >
+                    <option value={29}>30 days</option>
+                    <option value={6}>7 days</option>
+                    <option value={1}>1 day</option>
+                </select>
             </div>
             {selected ? <CryptoSummary crypto={selected} /> : null}
+            {data ? (
+                <div style={{ width: 600 }}>
+                    <Line options={options} data={data} />
+                </div>
+            ) : null}
         </>
     );
 }
