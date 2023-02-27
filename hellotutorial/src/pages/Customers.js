@@ -20,7 +20,12 @@ export default function Customers() {
 
     const url = baseUrl + 'api/customers/';
 
-    const { data: { customers } = {}, errorStatus } = useFetch(url, {
+    const {
+        request,
+        appendData,
+        data: { customers } = {},
+        errorStatus,
+    } = useFetch(url, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -29,76 +34,26 @@ export default function Customers() {
     });
 
     useEffect(() => {
-        console.log('customers:', customers, 'errorStatus:', errorStatus);
+        request();
     });
 
     /*
     useEffect(() => {
-        const url = baseUrl + 'api/customers/';
+        console.log(
+            request,
+            appendData,
+            'customers:',
+            customers,
+            'errorStatus:',
+            errorStatus
+        );
+    });
+    */
 
-        fetch(url, {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + localStorage.getItem('access'),
-            },
-        })
-            .then((response) => {
-                console.log(response.status);
-
-                if (response.status === 401) {
-                    setLoggedIn(false);
-                    navigate('/login', {
-                        state: {
-                            previousUrl: location.pathname,
-                        },
-                    });
-                }
-                if (!response.ok) {
-                    throw new Error('Something went wrong');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setCustomers(data.customers);
-                console.log(data.customers);
-            })
-            .catch((e) => {
-                console.log(e.message);
-            });
-    }, []);
-*/
     function newCustomer(name, industry) {
-        /*
-        const data = { name: name, industry: industry };
+        appendData({ name: name, industry: industry });
 
-        console.log('In newCustomer');
-        const url = baseUrl + 'api/customers/';
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Something went wrong');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                //assume the add was successful
-                // hide the modal
-                //make sure the list is updated
-                toggleShow();
-                console.log(data);
-                setCustomers([...customers, data.customer]);
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-            */
+        if (!errorStatus) toggleShow();
     }
 
     return (
