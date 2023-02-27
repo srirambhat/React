@@ -4,9 +4,10 @@ import { baseUrl } from '../shared';
 import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { login } from '../pages/Login';
 import { LoginContext } from '../App';
+import useFetch from '../Hooks/UseFetch';
 
 export default function Customers() {
-    const [customers, setCustomers] = useState();
+    //const [customers, setCustomers] = useState();
     const [show, setShow] = useState(false);
 
     const navigate = useNavigate();
@@ -17,6 +18,21 @@ export default function Customers() {
         setShow(!show);
     }
 
+    const url = baseUrl + 'api/customers/';
+
+    const { data: { customers } = {}, errorStatus } = useFetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + localStorage.getItem('access'),
+        },
+    });
+
+    useEffect(() => {
+        console.log('customers:', customers, 'errorStatus:', errorStatus);
+    });
+
+    /*
     useEffect(() => {
         const url = baseUrl + 'api/customers/';
 
@@ -50,8 +66,9 @@ export default function Customers() {
                 console.log(e.message);
             });
     }, []);
-
+*/
     function newCustomer(name, industry) {
+        /*
         const data = { name: name, industry: industry };
 
         console.log('In newCustomer');
@@ -81,6 +98,7 @@ export default function Customers() {
             .catch((e) => {
                 console.log(e);
             });
+            */
     }
 
     return (
