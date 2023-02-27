@@ -3,48 +3,25 @@ import { v4 as uuidv4 } from 'uuid';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import NotFound from '../Components/NotFound';
 import DefinitionSearch from '../Components/DefinitionSearch';
+import useFetch from '../Hooks/UseFetch';
 
 export default function Definition() {
-    const [word, setWord] = useState();
+    //const [word, setWord] = useState();
     console.log(useParams());
 
     let { search } = useParams();
     const navigate = useNavigate();
-    const [notFound, setNotfound] = useState(false);
-    const [error, setError] = useState(false);
     const location = useLocation();
 
+    const [word, errorStatus] = useFetch(
+        'https://api.dictionaryapi.dev/api/v2/entries/en/' + search
+    );
+
     useEffect(() => {
-        const url = 'https://api.dictionaryapi.dev/api/v2/entries/en/' + search;
-        fetch(url)
-            .then((response) => {
-                console.log(response.status);
+        console.log('word', word, 'errorStatus', errorStatus);
+    });
 
-                if (response.status === 404) {
-                    //navigate('/404');
-                    setNotfound(true);
-                } else if (response.status === 401) {
-                    //navigate('/login');
-                } else if (response.status === 500) {
-                    navigate('/servererror');
-                }
-
-                if (!response.ok) {
-                    setError(true);
-                    throw new Error('Something went wrong');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setWord(data[0].meanings);
-                console.log(data[0].meanings);
-            })
-            .catch((e) => {
-                console.log(e.message);
-            });
-    }, []);
-
-    if (notFound === true) {
+    if (errorStatus === 404) {
         return (
             <>
                 <NotFound />
@@ -53,10 +30,10 @@ export default function Definition() {
         );
     }
 
-    if (error === true) {
+    if (errorStatus) {
         return (
             <>
-                <p>Something went wrong, try again ?</p>
+                <p>There was a problem with the server, try again later ?</p>
                 <Link to="/dictionary">Search another</Link>
             </>
         );
@@ -64,10 +41,10 @@ export default function Definition() {
 
     return (
         <>
-            {word ? (
+            {word?.[0]?.meanings ? (
                 <>
                     <h1>Here is the definition: </h1>
-                    {word.map((meaning) => {
+                    {word[0].meanings.map((meaning) => {
                         return (
                             <p key={uuidv4()}>
                                 {meaning.partOfSpeech + ': '}
