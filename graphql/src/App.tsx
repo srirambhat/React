@@ -2,10 +2,16 @@ import './App.css';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
 
+export type Order = {
+    id: number;
+    description: string;
+    totalInCents: number;
+};
 export type Customer = {
     id: number;
     name: string;
     industry: string;
+    orders: Order[];
 };
 
 const GET_DATA = gql`
@@ -14,6 +20,11 @@ const GET_DATA = gql`
             id
             name
             industry
+            orders {
+                id
+                description
+                totalInCents
+            }
         }
     }
 `;
@@ -62,18 +73,37 @@ function App() {
 
     return (
         <div className="App">
+            <h1> Customers</h1>
             {error ? <p>Something went wrong </p> : null}
             {loading ? <p>Loading data from backend </p> : null}
             {data
                 ? data.customers.map((customer: Customer) => {
                       return (
-                          <p key={customer.id}>
-                              {' '}
-                              {customer.name + ' ' + customer.industry}
-                          </p>
+                          <div>
+                              <h2 key={customer.id}>
+                                  {customer.name +
+                                      ' ( ' +
+                                      customer.industry +
+                                      ' ) '}
+                              </h2>
+                              {customer.orders.map((order: Order) => {
+                                  return (
+                                      <div>
+                                          <> {order.description + ' '}</>$
+                                          {(
+                                              order.totalInCents / 100
+                                          ).toLocaleString(undefined, {
+                                              minimumFractionDigits: 2,
+                                              maximumFractionDigits: 2,
+                                          })}
+                                      </div>
+                                  );
+                              })}
+                          </div>
                       );
                   })
                 : null}
+            <h3> Add a Customer</h3>
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
@@ -99,6 +129,7 @@ function App() {
                         }}
                     />
                 </div>
+                <br></br>
                 <div>
                     <label htmlFor="industry">Industry: </label>
                     <input
@@ -110,6 +141,7 @@ function App() {
                         }}
                     />
                 </div>
+                <br></br>
                 <button disabled={createCustomerLoading ? true : false}>
                     Add Customer
                 </button>
