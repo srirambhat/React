@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useQuery, gql, useMutation } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client';
 
 export type AppProps = {
     customerId: Number;
