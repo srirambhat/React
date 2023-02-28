@@ -27,4 +27,5 @@ export type Crypto = {
     symbol: string;
     total_supply: number;
     total_volume: number;
+    owned: number;
 };
