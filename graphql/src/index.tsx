@@ -12,13 +12,15 @@ import {
 let client = new ApolloClient({
     //uri: 'https://main--spacex-l4uc6p.apollographos.net/graphql ',
     // uri: 'https://api.spacexdata.com/v5/launches/latest',
-    uri: 'https://api.spacex.land/graphql',
+    //uri: 'https://api.spacex.land/graphql',
+    uri: 'http://localhost:8000/graphql/',
     cache: new InMemoryCache(),
 });
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
+
 root.render(
     <React.StrictMode>
         <ApolloProvider client={client}>
