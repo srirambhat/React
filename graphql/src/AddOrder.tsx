@@ -1,13 +1,68 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useQuery, gql, useMutation } from '@apollo/client';
 
 export type AppProps = {
     customerId: Number;
 };
 
+const GET_DATA = gql`
+    {
+        customers {
+            id
+            name
+            industry
+            orders {
+                id
+                description
+                totalInCents
+            }
+        }
+    }
+`;
+
+const MUTATE_DATA = gql`
+    mutation MUTATE_DATA(
+        $description: String!
+        $totalInCents: Int!
+        $customer: ID
+    ) {
+        createOrder(
+            customer: $customer
+            description: $description
+            totalInCents: $totalInCents
+        ) {
+            order {
+                id
+                customer {
+                    id
+                    name
+                    industry
+                }
+                description
+                totalInCents
+            }
+        }
+    }
+`;
+
 export default function AddOrder({ customerId }: AppProps) {
     const [active, setActive] = useState(false);
     const [description, setDescription] = useState<string>('');
-    const [cost, setCost] = useState<number>(NaN);
+    const [totalInCents, setTotalInCents] = useState<number>(NaN);
+
+    const [createOrder, { loading, error, data }] = useMutation(MUTATE_DATA, {
+        refetchQueries: [
+            { query: GET_DATA }, // DocumentNode object parsed with gql
+        ],
+    });
+
+    useEffect(() => {
+        if (data) {
+            console.log(data);
+            setDescription('');
+            setTotalInCents(NaN);
+        }
+    }, [data]);
 
     return (
         <div>
@@ -26,7 +81,14 @@ export default function AddOrder({ customerId }: AppProps) {
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
-                            console.log(customerId, description, cost);
+                            console.log(customerId, description, totalInCents);
+                            createOrder({
+                                variables: {
+                                    customer: customerId,
+                                    description: description,
+                                    totalInCents: totalInCents * 100,
+                                },
+                            });
                         }}
                     >
                         <div>
@@ -46,23 +108,19 @@ export default function AddOrder({ customerId }: AppProps) {
                             <input
                                 id="cost"
                                 type="number"
-                                value={isNaN(cost) ? '' : cost}
+                                value={isNaN(totalInCents) ? '' : totalInCents}
                                 onChange={(e) => {
-                                    setCost(parseFloat(e.target.value));
+                                    setTotalInCents(parseFloat(e.target.value));
                                 }}
                             />
                         </div>
                         <br></br>
-                        {/*}
-                        <button disabled={createCustomerLoading ? true : false}>
-                            Add Customer
+
+                        <button disabled={loading ? true : false}>
+                            Add order
                         </button>
-                        {createCustomerError ? (
-                            <p>Error Creating Customer</p>
-                        ) : null}
-                        */}
-                        <button> Add order </button>
                     </form>
+                    {error ? <p> Something went wrong</p> : null}
                 </div>
             ) : null}
         </div>
