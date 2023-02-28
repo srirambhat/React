@@ -35,20 +35,7 @@ export default function Customers() {
 
     useEffect(() => {
         request();
-    });
-
-    /*
-    useEffect(() => {
-        console.log(
-            request,
-            appendData,
-            'customers:',
-            customers,
-            'errorStatus:',
-            errorStatus
-        );
-    });
-    */
+    }, [Customers]);
 
     function newCustomer(name, industry) {
         appendData({ name: name, industry: industry });
