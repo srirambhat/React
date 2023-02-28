@@ -1,6 +1,7 @@
 import './App.css';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import { useEffect, useState } from 'react';
+import AddOrder from './AddOrder';
 
 export type Order = {
     id: number;
@@ -79,8 +80,8 @@ function App() {
             {data
                 ? data.customers.map((customer: Customer) => {
                       return (
-                          <div>
-                              <h2 key={customer.id}>
+                          <div key={customer.id}>
+                              <h2>
                                   {customer.name +
                                       ' ( ' +
                                       customer.industry +
@@ -88,7 +89,7 @@ function App() {
                               </h2>
                               {customer.orders.map((order: Order) => {
                                   return (
-                                      <div>
+                                      <div key={order.id}>
                                           <> {order.description + ' '}</>$
                                           {(
                                               order.totalInCents / 100
@@ -99,6 +100,7 @@ function App() {
                                       </div>
                                   );
                               })}
+                              <AddOrder customerId={customer.id} />
                           </div>
                       );
                   })
