@@ -1,8 +1,12 @@
 import type { NextPage } from 'next';
-import styles from '../../styles/Home.module.css';
+import { useRouter } from 'next/router';
 
 const Customer: NextPage = () => {
-    return <div>Customer</div>;
+    const router = useRouter();
+    const { id } = router.query;
+
+    console.log(id);
+    return <div>Customer {id} </div>;
 };
 
 export default Customer;
