@@ -5,6 +5,17 @@ import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { login } from '../pages/Login';
 import { LoginContext } from '../App';
 import useFetch from '../Hooks/UseFetch';
+import { useTable } from 'react-table';
+
+const styles = {
+    thead: {
+        backgroundColor: 'skyblue',
+    },
+    td: {
+        padding: '10px',
+        border: 'solid 1px black',
+    },
+};
 
 export default function Customers() {
     //const [customers, setCustomers] = useState();
@@ -44,29 +55,34 @@ export default function Customers() {
     }
 
     return (
-        <>
+        <div className="App">
             {customers ? (
-                <>
-                    <h1>List of Customers: </h1>
-                    {customers.map((customer) => {
-                        return (
-                            <div className="m-2" key={customer.id}>
+                <tbody>
+                    <tr style={styles.thead}>
+                        <th className="px-3">ID</th>
+                        <th className="px-2">Name</th>
+                        <th className="px-2">Industry</th>
+                    </tr>
+                    {customers.map((customer, index) => (
+                        <tr key={index}>
+                            <td style={styles.td}>{customer.id}</td>
+                            <td style={styles.td}>
                                 <Link to={'/customers/' + customer.id}>
-                                    <button className="no-underline bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+                                    <button className="text-blue font-bold py-0 px-1">
                                         {customer.name}
                                     </button>
                                 </Link>
-                            </div>
-                        );
-                    })}
-                </>
+                            </td>
+                            <td style={styles.td}>{customer.industry}</td>
+                        </tr>
+                    ))}
+                </tbody>
             ) : null}
-
             <AddCustomer
                 newCustomer={newCustomer}
                 show={show}
                 toggleShow={toggleShow}
-            />
-        </>
+            ></AddCustomer>
+        </div>
     );
 }
