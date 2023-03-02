@@ -5,15 +5,16 @@ import item_list from './Headers/headers';
 
 function App() {
     const [setoption, setOption] = useState(NaN);
+    const [setfilteredItem, setFilteredItem] = useState();
 
     useEffect(() => {
         if (setoption) {
             console.log('in UseEffect: ', setoption);
             item_list
                 .filter((item) => item.index === setoption)
-                .map((filteredPerson) => (
-                    <li>{console.log(filteredPerson)}</li>
-                ));
+                .map((filteredItem) => {
+                    <li>{console.log(filteredItem)}</li>;
+                });
         }
     });
 
@@ -22,7 +23,7 @@ function App() {
             <select
                 onChange={(e) => {
                     setOption(parseInt(e.target.value));
-                    console.log('inLine: ', setoption);
+                    //console.log('inLine: ', setoption);
                 }}
                 defaultValue="default"
             >
@@ -42,30 +43,3 @@ function App() {
 }
 
 export default App;
-/*
-
-
-
-    useEffect(() => {
-        if (setoption) {
-            console.log('setoption: ', setoption);
-            //console.log(idSearch(setoption));
-            <>
-                <div>
-                    {itemlist
-                        .filter((item) => item.index === setoption)
-                        .map((filteredItem) => (
-                            <>{console.log(filteredItem.name)}</>
-                        ))}
-                </div>
-            </>;
-        }
-    });
-
-    return (
-        
-    );
-}
-
- 
-    */
