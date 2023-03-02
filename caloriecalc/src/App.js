@@ -1,7 +1,8 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import './App.css';
-import item_list from './Headers/headers';
+import item_list from './Headers/ItemList';
+import Navbar from './Headers/navbar';
 
 function App() {
     const [setoption, setOption] = useState(NaN);
@@ -19,8 +20,11 @@ function App() {
     });
 
     return (
-        <div className="App">
+        <div className="App mx-5 my-5">
+            <Navbar></Navbar>
+            <br></br>
             <select
+                className="bg-red-200 rounded-md"
                 onChange={(e) => {
                     setOption(parseInt(e.target.value));
                     //console.log('inLine: ', setoption);
