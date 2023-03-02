@@ -1,7 +1,7 @@
 import type { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next';
 import axios from 'axios';
 
-type Customer = {
+export type Customer = {
     id: number;
     name: string;
     industry: string;
