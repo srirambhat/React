@@ -71,7 +71,7 @@ const item_list = [
             'dietary-fibre': 0,
             sodium: 47,
         },
-        contains: ['canola-oil', 'maltodextrin'],
+        tags: ['canola-oil', 'maltodextrin'],
     },
     {
         index: 6,
