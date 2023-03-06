@@ -17,16 +17,22 @@ interface Params extends ParsedUrlQuery {
  * Which of the ID's must you return the data for. If not, then it will return a 404 error on client
  */
 export const getStaticPaths: GetStaticPaths = async () => {
-    const result = await axios.get('http://127.0.0.1:8000/api/customers/');
-    const paths = result.data.customers.map((customer: Customer) => {
-        return {
-            params: { id: customer.id.toString() },
-        };
-    });
+    //const result = await axios.get('http://127.0.0.1:8000/api/customers/');
+    //const paths = result.data.customers.map((customer: Customer) => {
+    //    return {
+    //        params: { id: customer.id.toString() },
+    //    };
+    //});
+    // If you comment the line paths and add the paths: [], it is called lazy caching
+    // You will get a cache miss the first time and after that it will be a cache hit and will serve the
+    // data from cache
 
     return {
-        paths: paths,
+        //paths: paths,
+        paths: [],
         fallback: true,
+        // Web crawlers use this method to view the actual data being rendered.
+        //fallback: 'blocking',
     };
 };
 
@@ -45,12 +51,15 @@ export const getStaticProps: GetStaticProps<Props, Params> = async (
             props: {
                 customer: result.data.customer,
             },
+            // Revalidate after sometime
+            revalidate: 60,
         };
     } catch (error) {
         if (error instanceof AxiosError) {
             if (error.response?.status === 404) {
                 return {
                     notFound: true,
+                    revalidate: 60, // in seconds
                 };
             }
         }
