@@ -4,6 +4,9 @@ import { ScriptProps } from 'next/script';
 import { Customer } from '../customers';
 import axios, { AxiosError } from 'axios';
 import { ParsedUrlQuery } from 'querystring';
+import clientPromise from '../../lib/mongodb';
+import { BSONType, ObjectId } from 'mongodb';
+import { BSONTypeError } from 'bson';
 
 type Props = {
     customer?: Customer;
@@ -42,30 +45,39 @@ export const getStaticProps: GetStaticProps<Props, Params> = async (
     const params = context.params!;
 
     try {
-        const result = await axios.get<{ customer: Customer }>(
-            `http://127.0.0.1:8000/api/customers/${params.id}`
-        );
+        const mClient = await clientPromise;
 
-        console.log('Returned from Server: ', result);
+        const data = (await mClient
+            .db()
+            .collection('customers')
+            .findOne({ _id: new ObjectId(params.id) })) as Customer;
+
+        if (!data) {
+            return {
+                notFound: true,
+                revalidate: 60, // in seconds
+            };
+        }
+        console.log('!!!!!!', data);
+
         return {
             props: {
-                customer: result.data.customer,
+                customer: JSON.parse(JSON.stringify(data)),
             },
             // Revalidate after sometime
             revalidate: 60,
         };
     } catch (error) {
-        if (error instanceof AxiosError) {
-            if (error.response?.status === 404) {
-                return {
-                    notFound: true,
-                    revalidate: 60, // in seconds
-                };
-            }
+        console.log(error);
+        if (error instanceof BSONTypeError) {
+            return {
+                notFound: true,
+            };
         }
         return {
             props: {},
         };
+        throw error;
     }
 };
 
