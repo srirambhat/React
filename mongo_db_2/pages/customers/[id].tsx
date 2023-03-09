@@ -2,7 +2,6 @@ import type { GetStaticProps, GetStaticPaths, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { ScriptProps } from 'next/script';
 import { Customer } from '../customers';
-import axios, { AxiosError } from 'axios';
 import { ParsedUrlQuery } from 'querystring';
 import clientPromise from '../../lib/mongodb';
 import { BSONType, ObjectId } from 'mongodb';
