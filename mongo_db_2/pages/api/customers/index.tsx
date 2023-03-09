@@ -51,6 +51,8 @@ export default async (
                 industry: req.body.industry,
             };
             const insertedId = await postCustomerDataToMongoDB(customer);
+            res.revalidate('/customers');
+            res.revalidate('/customers/' + insertedId);
             res.status(200).json(insertedId);
         } else {
             res.status(400).json({ error: 'name and industry are required' });
