@@ -15,10 +15,13 @@ function App() {
             // This is very specific to this fetch v/s if it was specified in index.js, then it done for all
             // useQuery
             refetchInterval: 5 * 1000, // milliseconds
+            //staleTime: 5 * 1000, // Stale time for which data is fresh
+            //refetchIntervalInBackground: false
+            //refetchOnWindowFocus: false,
         }
     );
 
-    const GlobalQuery = useQuery(
+    const CustQuery = useQuery(
         ['Customers'],
         () => {
             return axios('http://localhost:3000/api/customers');
@@ -30,24 +33,33 @@ function App() {
         }
     );
 
-    if (priceQuery?.isLoading || GlobalQuery?.isLoading) return 'Loading...';
+    if (priceQuery?.isLoading || CustQuery?.isLoading) return 'Loading...';
     if (priceQuery?.error)
         return 'An error occured: ' + priceQuery?.error.message;
 
-    if (GlobalQuery?.error)
-        return 'An error occured: ' + GlobalQuery?.error.message;
+    if (CustQuery?.error)
+        return 'An error occured: ' + CustQuery?.error.message;
 
     console.log(priceQuery?.data?.data);
-    console.log(GlobalQuery?.data?.data?.data);
+    console.log(CustQuery?.data?.data?.data);
+
     return (
         <div className="App">
             {priceQuery?.data?.data?.bitcoin?.usd
                 ? priceQuery?.data?.data?.bitcoin?.usd
                 : null}
-            {'   '}
-            {GlobalQuery?.data?.data?.data?.active_cryptocurrencies
-                ? GlobalQuery?.data?.data?.data?.active_cryptocurrencies
-                : null}
+            <>
+                <h1>Customers</h1>
+                {CustQuery?.data?.data?.customers.map((customer) => {
+                    return (
+                        <div key={customer._id?.toString()}>
+                            <> {customer._id?.toString() + ':'}</>
+                            <> {customer.name + '  ('}</>
+                            <> {customer.industry + ')'}</>
+                        </div>
+                    );
+                })}
+            </>
         </div>
     );
 }
