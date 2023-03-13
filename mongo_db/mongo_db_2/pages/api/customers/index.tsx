@@ -41,7 +41,7 @@ export default async (
     await NextCors(req, res, {
         methods: ['GET', 'POST'],
         //origin: '*',
-        origin: ['http://localhost:3001'],
+        origin: ['http://localhost:3001', 'http://localhost:3002'],
         optionsSuccessStatus: 200,
     });
 
