@@ -159,42 +159,44 @@ export default function Theme(props: any) {
                     </Toolbar>
                     <Divider />
                     <List component="nav">
-                        <ListItemButton
-                            selected={router.pathname === '/' ? true : false}
-                            component={Link}
-                            href="/"
-                        >
-                            <ListItemIcon>
-                                <DashboardIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Dashboard" />
-                        </ListItemButton>
-                        {
+                        <Link href="/">
                             <ListItemButton
                                 selected={
                                     router.pathname === '/' ? true : false
                                 }
-                                component={Link}
-                                href="/orders/"
+                            >
+                                <ListItemIcon>
+                                    <DashboardIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Dashboard" />
+                            </ListItemButton>
+                        </Link>
+                        <Link href="/orders">
+                            <ListItemButton
+                                selected={
+                                    router.pathname === '/orders' ? true : false
+                                }
                             >
                                 <ListItemIcon>
                                     <ShoppingCartIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Orders" />
                             </ListItemButton>
-                        }
-                        <ListItemButton
-                            component={Link}
-                            href="/customers/"
-                            selected={
-                                router.pathname === '/customers' ? true : false
-                            }
-                        >
-                            <ListItemIcon>
-                                <PeopleIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Customers" />
-                        </ListItemButton>
+                        </Link>
+                        <Link href="/customers">
+                            <ListItemButton
+                                selected={
+                                    router.pathname === '/customers'
+                                        ? true
+                                        : false
+                                }
+                            >
+                                <ListItemIcon>
+                                    <PeopleIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Customers" />
+                            </ListItemButton>
+                        </Link>
                         <Divider sx={{ my: 1 }} />
                     </List>
                 </Drawer>

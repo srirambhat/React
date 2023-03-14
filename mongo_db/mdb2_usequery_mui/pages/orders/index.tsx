@@ -100,9 +100,9 @@ const Orders: NextPage = (props: any) => {
                     }}
                     rows={props.orders}
                     columns={columns}
-                    pageSizeOptions={[5]}
+                    rowsPerPageOptions={[5]}
                     checkboxSelection
-                    disableRowSelectionOnClick
+                    disableSelectionOnClick
                     experimentalFeatures={{ newEditingApi: true }}
                     initialState={{
                         filter: {
