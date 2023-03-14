@@ -76,6 +76,7 @@ export default async (
         const data = await editCustomer(id as string, {
             name: req.body.name,
             industry: req.body.industry,
+            orders: req.body.orders,
         });
         if (data.modifiedCount > 0)
             res.status(200).json({ modifiedCount: data.modifiedCount });
