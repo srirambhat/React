@@ -14,7 +14,7 @@ export default function App({ Component, pageProps }: AppProps) {
     return (
         <QueryClientProvider client={queryClient}>
             <Theme>
-                <Component {...pageProps} />;
+                <Component {...pageProps} />
                 <ReactQueryDevtools initialIsOpen={false} />
             </Theme>
         </QueryClientProvider>

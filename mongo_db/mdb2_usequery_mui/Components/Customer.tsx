@@ -6,6 +6,7 @@ import { margin } from '@mui/system';
 import { Padding } from '@mui/icons-material';
 
 import { Customer } from '../pages/customers';
+import Grid from '@mui/material/Grid';
 
 type props = {
     customer: Customer;
@@ -13,10 +14,7 @@ type props = {
 
 const Customer = ({ customer }: props) => {
     return (
-        <div
-            key={customer._id?.toString()}
-            style={{ marginBottom: 40, padding: 10 }}
-        >
+        <Grid item>
             <span
                 style={{
                     display: 'flex',
@@ -31,7 +29,7 @@ const Customer = ({ customer }: props) => {
             </span>
             <p> {customer.industry}</p>
             <Button variant="contained">View Orders</Button>
-        </div>
+        </Grid>
     );
 };
 

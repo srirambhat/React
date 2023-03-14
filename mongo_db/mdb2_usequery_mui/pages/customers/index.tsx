@@ -6,11 +6,20 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 import CustomerComponent from '../../Components/Customer';
+import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
+
+export type Order = {
+    description: string;
+    price: { $numberDecimal: string };
+    _id?: ObjectId;
+};
 
 export type Customer = {
     _id?: ObjectId;
     name: string;
     industry: string;
+    orders: Order[];
 };
 
 type GetCustomerReponse = {
@@ -47,17 +56,18 @@ const Customers: NextPage = ({
 
     console.log(c, customers);
     return (
-        <>
-            <h1>Customers</h1>
-            {customers.map((customer: Customer) => {
-                return (
-                    <CustomerComponent
-                        key={customer._id?.toString()}
-                        customer={customer}
-                    />
-                );
-            })}
-        </>
+        <Container>
+            <Grid container spacing={5} sx={{ mt: 1 }}>
+                {customers.map((customer: Customer) => {
+                    return (
+                        <CustomerComponent
+                            key={customer._id?.toString()}
+                            customer={customer}
+                        />
+                    );
+                })}
+            </Grid>
+        </Container>
     );
 };
 
