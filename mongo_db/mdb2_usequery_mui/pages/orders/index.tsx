@@ -1,13 +1,24 @@
+/* eslint-disable react/jsx-no-duplicate-props */
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import Container from '@mui/material/Container';
 import { GetStaticProps, NextPage } from 'next/types';
-import Customer from '@/Components/Customer';
 import { getCustomerDataFromMongoDB } from '../api/customers';
+import { useRouter } from 'next/router';
 
 const columns: GridColDef[] = [
     //{ field: 'id', headerName: 'ID', width: 90 },
+    {
+        field: 'id',
+        headerName: 'Order ID',
+        width: 100,
+    },
+    {
+        field: 'customerId',
+        headerName: 'Customer ID',
+        width: 100,
+    },
     {
         field: 'customer',
         headerName: 'Customer',
@@ -30,18 +41,6 @@ const columns: GridColDef[] = [
     },
 ];
 
-const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-];
-
 export const getStaticProps: GetStaticProps = async (context) => {
     const data = await getCustomerDataFromMongoDB();
 
@@ -57,6 +56,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
                 orders.push({
                     ...order,
                     customer: customer.name,
+                    customerId: customer._id,
                     id: order._id,
                     price: order.price.$numberDecimal,
                 });
@@ -82,23 +82,41 @@ export const getStaticProps: GetStaticProps = async (context) => {
 };
 
 const Orders: NextPage = (props: any) => {
-    console.log(props);
+    const { customerId } = useRouter().query;
+
+    console.log('#####', props, customerId);
     return (
         <Container>
             <Box sx={{ height: 400, width: '100%' }}>
                 <DataGrid
+                    filterModel={{
+                        items: [
+                            {
+                                columnField: 'customerId',
+                                operatorValue: 'equals',
+                                value: customerId,
+                            },
+                        ],
+                    }}
                     rows={props.orders}
                     columns={columns}
-                    initialState={{
-                        pagination: {
-                            paginationModel: {
-                                pageSize: 5,
-                            },
-                        },
-                    }}
                     pageSizeOptions={[5]}
                     checkboxSelection
                     disableRowSelectionOnClick
+                    experimentalFeatures={{ newEditingApi: true }}
+                    initialState={{
+                        filter: {
+                            filterModel: {
+                                items: [
+                                    {
+                                        columnField: 'customerId',
+                                        operatorValue: 'equals',
+                                        value: customerId,
+                                    },
+                                ],
+                            },
+                        },
+                    }}
                 />
             </Box>
         </Container>

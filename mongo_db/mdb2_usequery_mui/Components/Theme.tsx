@@ -169,12 +169,20 @@ export default function Theme(props: any) {
                             </ListItemIcon>
                             <ListItemText primary="Dashboard" />
                         </ListItemButton>
-                        {/*<ListItemButton>
-                            <ListItemIcon>
-                                <ShoppingCartIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Orders" />
-                    </ListItemButton>*/}
+                        {
+                            <ListItemButton
+                                selected={
+                                    router.pathname === '/' ? true : false
+                                }
+                                component={Link}
+                                href="/orders/"
+                            >
+                                <ListItemIcon>
+                                    <ShoppingCartIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Orders" />
+                            </ListItemButton>
+                        }
                         <ListItemButton
                             component={Link}
                             href="/customers/"

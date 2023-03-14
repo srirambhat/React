@@ -7,6 +7,7 @@ import { Padding } from '@mui/icons-material';
 
 import { Customer } from '../pages/customers';
 import Grid from '@mui/material/Grid';
+import Link from 'next/link';
 
 type props = {
     customer: Customer;
@@ -28,7 +29,16 @@ const Customer = ({ customer }: props) => {
                 {customer.name}
             </span>
             <p> {customer.industry}</p>
-            <Button variant="contained">View Orders</Button>
+            <Link
+                href={{
+                    pathname: '/orders',
+                    query: {
+                        customerId: customer._id?.toString(),
+                    },
+                }}
+            >
+                <Button variant="contained">View Orders</Button>
+            </Link>
         </Grid>
     );
 };
