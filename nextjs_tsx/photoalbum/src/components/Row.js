@@ -3,6 +3,7 @@ import YouTube from 'react-youtube';
 import axios from '../api/axios';
 import '../styles/Row.css';
 import movieTrailer from 'movie-trailer';
+import mapping from '../api/mapping';
 
 const baseURL = 'https://image.tmdb.org/t/p/original/';
 //VideoId: XtMThy8QKqU
@@ -19,6 +20,10 @@ function Row({ title, fetchUrl, isLargeRow }) {
             autoplay: 1,
         },
     };
+
+    function getkeyFromvalue(object, value) {
+        return Object.keys(object).find((key) => object[key] === value);
+    }
 
     useEffect(() => {
         async function fetchData() {
@@ -38,10 +43,25 @@ function Row({ title, fetchUrl, isLargeRow }) {
             movieTrailer(movie?.name || '', { id: true, multi: true })
                 .then((response) => {
                     console.log('response:', response);
-                    // const urlParams = new URLSearchParams(new URL(url).search);
-                    // console.log('urlParams', urlParams);
-                    // setTrailerUrl(urlParams.get('v'));
-                    setTrailerUrl(response ? response : '');
+                    if (!response) {
+                        if (movie?.original_name || movie?.name) {
+                            console.log('movie name:', movie?.name);
+                        } else {
+                            movie.name = 'undefined';
+                        }
+                        // find the response from the mapping
+                        var result = mapping.find(
+                            (t) =>
+                                t.movie ===
+                                (movie?.original_name ||
+                                    movie?.name ||
+                                    movie?.original_title)
+                        ).ymap;
+
+                        console.log('Mapping: ', result);
+                        setTrailerUrl(result ? result : '');
+                        //setTrailerUrl('oIZ4U21DRlM');
+                    } else setTrailerUrl(response ? response : '');
                 })
                 .catch((error) => console.log(error));
         }
