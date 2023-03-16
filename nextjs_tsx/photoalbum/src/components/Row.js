@@ -60,7 +60,6 @@ function Row({ title, fetchUrl, isLargeRow }) {
 
                         console.log('Mapping: ', result);
                         setTrailerUrl(result ? result : '');
-                        //setTrailerUrl('oIZ4U21DRlM');
                     } else setTrailerUrl(response ? response : '');
                 })
                 .catch((error) => console.log(error));
