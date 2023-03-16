@@ -21,10 +21,6 @@ function Row({ title, fetchUrl, isLargeRow }) {
         },
     };
 
-    function getkeyFromvalue(object, value) {
-        return Object.keys(object).find((key) => object[key] === value);
-    }
-
     useEffect(() => {
         async function fetchData() {
             const request = await axios.get(fetchUrl);
