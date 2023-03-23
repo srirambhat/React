@@ -1,9 +1,11 @@
 import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import SriramPhoto from '../assets/SriramPic.png';
 
 const navigation = [
-    { name: 'Dictionary', href: '/Dictionary', current: false },
+    { name: 'Cryptopie', href: '/Cryptopie', current: false },
+    { name: 'Cryptoline', href: '/Cryptoline', current: false },
     // { name: 'Dashboard', href: '#', current: true },
     // { name: 'Team', href: '#', current: false },
     // { name: 'Projects', href: '#', current: false },
@@ -42,7 +44,7 @@ export default function Example(props) {
                                     </Disclosure.Button>
                                 </div>
                                 <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                                    <div className="flex flex-shrink-0 items-center">
+                                    {/* <div className="flex flex-shrink-0 items-center">
                                         <img
                                             className="block h-8 w-auto lg:hidden"
                                             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
@@ -53,7 +55,7 @@ export default function Example(props) {
                                             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
                                             alt="Your Company"
                                         />
-                                    </div>
+                                    </div> */}
                                     <div className="hidden sm:ml-6 sm:block">
                                         <div className="flex space-x-4">
                                             {navigation.map((item) => (
@@ -63,7 +65,7 @@ export default function Example(props) {
                                                     className={classNames(
                                                         item.current
                                                             ? 'bg-gray-900 text-white'
-                                                            : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                                            : 'no-underline text-gray-300 hover:bg-gray-700 hover:text-white',
                                                         'rounded-md px-3 py-2 text-sm font-medium'
                                                     )}
                                                     aria-current={
@@ -101,7 +103,7 @@ export default function Example(props) {
                                                 </span>
                                                 <img
                                                     className="h-8 w-8 rounded-full"
-                                                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                                    src={SriramPhoto}
                                                     alt=""
                                                 />
                                             </Menu.Button>
