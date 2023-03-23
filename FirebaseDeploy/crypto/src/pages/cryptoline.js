@@ -27,7 +27,7 @@ const cnstdata = [
 export default function Cryptoline() {
     const [cryptos, setCryptos] = useState();
     const [range, setRange] = useState(30);
-    const [selected, setSelected] = useState();
+    const [selected, setSelected] = useState(false);
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -107,43 +107,47 @@ export default function Cryptoline() {
                 <div className="col-md-12">
                     <br></br>
                     <h4>
-                        {`${selected?.name} Price Over Last ` +
-                            range +
-                            (range === 1 ? ' Day.' : ' Days.')}
+                        {selected
+                            ? `${selected?.name} Price Over Last ` +
+                              range +
+                              (range === 1 ? ' Day.' : ' Days.')
+                            : null}
                     </h4>
                 </div>
                 {selected ? <CryptoSummary crypto={selected} /> : null}
 
-                <div className="section col-md-6">
-                    {/* <h3 className="section-title">Line Chart</h3> */}
-                    <div className="section-content">
-                        <ResponsiveContainer width="150%" height={500}>
-                            <LineChart
-                                data={data}
-                                margin={{
-                                    top: 15,
-                                    right: 0,
-                                    bottom: 15,
-                                    left: 0,
-                                }}
-                            >
-                                <Tooltip />
-                                <XAxis dataKey="dateortime" />
-                                <YAxis />
-                                <CartesianGrid
-                                    stroke="#ccc"
-                                    strokeDasharray="5 5"
-                                />
-                                <Legend />
-                                <Line
-                                    type="monotone"
-                                    dataKey="price"
-                                    stroke="#FB8833"
-                                />
-                            </LineChart>
-                        </ResponsiveContainer>
+                {selected ? (
+                    <div className="section col-md-6">
+                        {/* <h3 className="section-title">Line Chart</h3> */}
+                        <div className="section-content">
+                            <ResponsiveContainer width="150%" height={500}>
+                                <LineChart
+                                    data={data}
+                                    margin={{
+                                        top: 15,
+                                        right: 0,
+                                        bottom: 15,
+                                        left: 0,
+                                    }}
+                                >
+                                    <Tooltip />
+                                    <XAxis dataKey="dateortime" />
+                                    <YAxis />
+                                    <CartesianGrid
+                                        stroke="#ccc"
+                                        strokeDasharray="5 5"
+                                    />
+                                    <Legend />
+                                    <Line
+                                        type="monotone"
+                                        dataKey="price"
+                                        stroke="#FB8833"
+                                    />
+                                </LineChart>
+                            </ResponsiveContainer>
+                        </div>
                     </div>
-                </div>
+                ) : null}
 
                 {/* <div className="section col-md-6">
                     <h3 className="section-title">Bar Chart</h3>
