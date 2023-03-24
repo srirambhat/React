@@ -6,10 +6,6 @@ import SriramPhoto from '../assets/SriramPic.png';
 const navigation = [
     { name: 'Cryptopie', href: '/Cryptopie', current: false },
     { name: 'Cryptoline', href: '/Cryptoline', current: false },
-    // { name: 'Dashboard', href: '#', current: true },
-    // { name: 'Team', href: '#', current: false },
-    // { name: 'Projects', href: '#', current: false },
-    // { name: 'Calendar', href: '#', current: false },
 ];
 
 function classNames(...classes) {
