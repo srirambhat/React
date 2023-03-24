@@ -113,52 +113,46 @@ export default function Cryptopie() {
         <>
             <div className="cryptopie__projects section__padding" id="projects">
                 <div className="cryptopie__projects-heading">
-                    <div>
-                        <select
-                            className="px-2 py-1 mr-3 mt-4 rounded-md bg-gray-800 text-white "
-                            onChange={(e) => {
-                                console.log('e: ', e.target.value);
-                                const c = cryptos?.find(
-                                    (x) => x.id === e.target.value
-                                );
-                                console.log('c', c);
-                                setInputAmount(c);
-                                setNewSelected(c);
-                            }}
-                            defaultValue="default"
-                        >
-                            <option value="default">Choose an option</option>
-                            {cryptos
-                                ? cryptos.map((crypto) => {
-                                      return (
-                                          <option
-                                              key={crypto.id}
-                                              value={crypto.id}
-                                          >
-                                              {crypto.name}
-                                          </option>
-                                      );
-                                  })
-                                : null}
-                        </select>
+                    <select
+                        className="px-2 py-1 mr-3 mt-4 rounded-md bg-gray-800 text-white "
+                        onChange={(e) => {
+                            console.log('e: ', e.target.value);
+                            const c = cryptos?.find(
+                                (x) => x.id === e.target.value
+                            );
+                            console.log('c', c);
+                            setInputAmount(c);
+                            setNewSelected(c);
+                        }}
+                        defaultValue="default"
+                    >
+                        <option value="default">Choose an option</option>
+                        {cryptos
+                            ? cryptos.map((crypto) => {
+                                  return (
+                                      <option key={crypto.id} value={crypto.id}>
+                                          {crypto.name}
+                                      </option>
+                                  );
+                              })
+                            : null}
+                    </select>
 
-                        <input
-                            className="mx-0 px-2 py-1 mr-3 mt-4 rounded-md bg-gray-800 text-white"
-                            placeholder={amount ? amount : '0'}
-                            type="number"
-                            style={{ margin: 10 }}
-                            value={amount}
-                            onChange={(e) => {
-                                setAmount(parseFloat(e.target.value));
-                                updateOwned(
-                                    newSelected,
-                                    parseFloat(e.target.value)
-                                );
-                            }}
-                        ></input>
-                    </div>
+                    <input
+                        className="px-2 py-1 mr-3 mt-4 rounded-md bg-gray-800 text-white"
+                        placeholder="0"
+                        type="number"
+                        style={{ margin: 10 }}
+                        value={amount}
+                        onChange={(e) => {
+                            setAmount(parseFloat(e.target.value));
+                            updateOwned(
+                                newSelected,
+                                parseFloat(e.target.value)
+                            );
+                        }}
+                    ></input>
                 </div>
-
                 <div className="cryptopie__projects-heading">
                     {console.log('selected', selected)}
                     <TableContainer component={Paper}>
@@ -232,7 +226,7 @@ export default function Cryptopie() {
             {console.log('pieData:', pieData)}
             <div className="cryptopie__projects-heading">
                 {pieData ? (
-                    <PieChart width={630} height={300}>
+                    <PieChart width={730} height={300}>
                         <Pie
                             data={selected}
                             color="#000000"

@@ -114,7 +114,14 @@ export default function Cryptoline() {
                             : null}
                     </h4>
                 </div>
-                {selected ? <CryptoSummary crypto={selected} /> : null}
+                {selected ? (
+                    <h4>
+                        {selected.name +
+                            ' current price $' +
+                            selected.current_price}
+                    </h4>
+                ) : null}
+                {/* {selected ? <CryptoSummary crypto={selected} /> : null} */}
 
                 {selected ? (
                     <div className="section col-md-6">
