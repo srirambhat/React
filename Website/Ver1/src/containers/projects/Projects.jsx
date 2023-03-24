@@ -19,14 +19,14 @@ const projectsData = [
         link: 'https://gpt3-136be.web.app/',
     },
     {
-        title: 'Bit Coin tracker',
+        title: 'Crypto Coin tracker',
         text: 'Tracks BIT prices over a period of time.',
-        link: 'Cryptoline',
+        link: 'https://crypto-32d69.web.app/',
     },
     {
-        title: 'BC Investment tracker',
+        title: 'Crypto Coin Investment tracker',
         text: 'Tracks your investment in Bitcoin.',
-        link: 'https://gpt3-136be.web.app/',
+        link: 'https://crypto-32d69.web.app/',
     },
 ];
 
