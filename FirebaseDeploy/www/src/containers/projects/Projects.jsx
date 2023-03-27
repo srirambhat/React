@@ -171,13 +171,17 @@ export default function Projects() {
                 {selected?.link ? navigate(selected.link) : null}
             </div>
             <div className="wsb__projects section__padding" id="projects">
-                {selected?.WebimgUrl || selected?.AndroidImgUrl ? (
+                {selected ? (
                     <img
                         className="wsb__projects-container_groupA"
                         src={
                             androidisset
-                                ? selected?.AndroidImgUrl
-                                : selected?.WebimgUrl
+                                ? selected.AndroidImgUrl
+                                    ? selected.AndroidImgUrl
+                                    : null
+                                : selected.WebimgUrl
+                                ? selected.WebimgUrl
+                                : null
                         }
                         alt="calculator"
                     />
