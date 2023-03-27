@@ -1,6 +1,5 @@
 import React from 'react';
-import people from '../../../../../assets/people.png';
-import ai from '../../../../../assets/ai.png';
+import { ai, people } from '../../../../../assets/GPT3';
 import './header.css';
 
 const Header = () => (
