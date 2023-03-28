@@ -1,12 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RiMenu3Line, RiCloseLine } from 'react-icons/ri';
 import './navbar.css';
 
 export default function Navbar() {
     const [toggleMenu, setToggleMenu] = useState(false);
+    const [handleshow, handleShow] = useState(false);
+
+    useEffect(() => {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                handleShow(true);
+            } else handleShow(false);
+        });
+        return () => {
+            window.removeEventListener('scroll', this);
+        };
+    }, []);
 
     return (
-        <div className="wsb__navbar">
+        <div className={`wsb__navbar ${handleshow && 'nav__black'}`}>
             <div className="wsb__navbar-links">
                 <div className="wsb__navbar-links_logo">
                     {/* <img src={logo} alt={'logo'} /> */}

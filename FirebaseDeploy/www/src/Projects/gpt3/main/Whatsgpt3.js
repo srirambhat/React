@@ -1,6 +1,6 @@
 import React from 'react';
 import './whatsgpt3.css';
-import { Article, Brand, CTA, Navbar } from './Components';
+import { Brand, CTA } from './Components';
 import {
     Footer,
     Blog,

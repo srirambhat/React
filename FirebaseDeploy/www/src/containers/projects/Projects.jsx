@@ -28,6 +28,7 @@ export default function Projects() {
             id: '1',
             title: 'uFlix',
             text: 'uFlix is similar to Netflix UI',
+            // link: 'https://youflix-afdc1.web.app',
             link: '/uflix',
         },
         {
@@ -171,7 +172,8 @@ export default function Projects() {
                 {selected?.link ? navigate(selected.link) : null}
             </div>
             <div className="wsb__projects section__padding" id="projects">
-                {selected ? (
+                {console.log('Selected: ', selected)}
+                {selected?.AndroidImgUrl || selected?.WebimgUrl ? (
                     <img
                         className="wsb__projects-container_groupA"
                         src={

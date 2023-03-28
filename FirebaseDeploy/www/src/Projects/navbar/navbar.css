@@ -6,6 +6,10 @@
     padding: 2rem 6rem;
 }
 
+.nav__black {
+    background-color: #111;
+}
+
 .wsb__navbar-links {
     flex: 1;
     display: flex;

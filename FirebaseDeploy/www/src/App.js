@@ -1,6 +1,6 @@
 import './App.css';
-import { Cryptoline, Cryptopie, Navbar, Whatsgpt3 } from './components';
-import { Footer, Blog, Projects, Experience, Aboutme } from './containers';
+import { Cryptoline, Cryptopie, Navbar, Whatsgpt3, Uflix } from './Projects';
+import { Projects, Experience, Aboutme } from './containers';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 export default function App() {
@@ -10,10 +10,6 @@ export default function App() {
                 <div className="gradient__bg">
                     <Navbar></Navbar>
                 </div>
-                {/* <Aboutme />
-                <Projects />
-                <Experience />
-                <Footer /> */}
                 <BrowserRouter>
                     <Routes>
                         <Route path="/aboutme" element={<Aboutme />} />
@@ -22,6 +18,7 @@ export default function App() {
                         <Route path="/cryptoline" element={<Cryptoline />} />
                         <Route path="/cryptopie" element={<Cryptopie />} />
                         <Route path="/whatsgpt3" element={<Whatsgpt3 />} />
+                        <Route path="/uflix" element={<Uflix />} />
                         <Route path="/*" element={<Aboutme />} />
                     </Routes>
                 </BrowserRouter>
