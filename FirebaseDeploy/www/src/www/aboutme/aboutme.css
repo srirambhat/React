@@ -28,11 +28,22 @@
 .wsb__aboutme-content p {
     font-family: var(--font-family);
     font-weight: 400;
-    font-size: 14px;
-    line-height: 18px;
+    font-size: 20px;
+    line-height: 24px;
     color: var(--color-text);
 
-    margin-top: 0.2rem;
+    margin-top: 0.5rem;
+}
+
+.wsb__aboutme-content b {
+    font-family: var(--font-family);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+    color: var(--color-subtext);
+    font-weight: 500;
+
+    margin-top: 0.5rem;
 }
 
 .wsb__aboutme-content__input {

@@ -14,9 +14,12 @@ export default function Aboutme() {
             <div className="wsb__aboutme-content">
                 <h1 className="gradient__text">Sriram Bhat</h1>
                 <p>
-                    An accomplished Engineering leader with experience in
-                    Windows OS/Drivers, Networking, Cloud Deployment(s), Android
-                    Apps Development, Full Stack & Embedded SW development.
+                    An accomplished Engineering leader with experience in{' '}
+                    <b>
+                        Windows OS/Drivers, Networking, AWS Deployment(s),
+                        Android Apps Development, Full Stack & Embedded SW
+                        development.
+                    </b>
                 </p>
                 <p className="tab">- Product development,</p>
                 <p className="tab">- Quality & Speed of Delivery, </p>
