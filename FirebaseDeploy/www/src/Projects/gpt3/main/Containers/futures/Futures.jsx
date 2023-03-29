@@ -5,19 +5,19 @@ import './futures.css';
 const futuresData = [
     {
         title: 'Improving end distrusts instantly',
-        text: 'From they fine john he give of rich he. They age and draw mrs like. Improving end distrusts may instantly was household applauded.',
+        text: 'We are improving by the day to end the distrusts being caused by OpenAI',
     },
     {
         title: 'Become the tended active',
-        text: 'Considered sympathize ten uncommonly occasional assistance sufficient not. Letter of on become he tended active enable to.',
+        text: 'Become active on Chatbots and get all your questions answered.',
     },
     {
         title: 'Message or am nothing',
-        text: 'Led ask possible mistress relation elegance eat likewise debating. By message or am nothing amongst chiefly address.',
+        text: 'Ask me anything via a message and will let you know immediately what the possibilities are..',
     },
     {
         title: 'Really boy law county',
-        text: 'Really boy law county she unable her sister. Feet you off its like like six. Among sex are leave law built now. In built table in an rapid blush..',
+        text: 'We are by the book and but dont use us in exams!!! not by law. ',
     },
 ];
 
@@ -26,7 +26,7 @@ const Futures = () => (
         <div className="gpt3__futures-heading">
             <h1 className="gradient__text">
                 The Future is Now and You Just Need to Realize It. Step into
-                Future Today. & Make it Happen.
+                Future Today & make it Happen.
             </h1>
             <p>Request Early Access to Get Started</p>
         </div>

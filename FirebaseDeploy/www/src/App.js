@@ -1,6 +1,6 @@
 import './App.css';
 import { Cryptoline, Cryptopie, Navbar, Whatsgpt3, Uflix } from './Projects';
-import { Projects, Experience, Aboutme } from './containers';
+import { Projects, Experience, Aboutme } from './www';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 export default function App() {

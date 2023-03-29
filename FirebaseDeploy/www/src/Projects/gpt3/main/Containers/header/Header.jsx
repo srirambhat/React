@@ -9,10 +9,10 @@ const Header = () => (
                 Let&apos;s Build Something amazing with GPT-3 OpenAI
             </h1>
             <p>
-                Yet bed any for travelling assistance indulgence unpleasing. Not
-                thoughts all exercise blessing. Indulgence way everything joy
-                alteration boisterous the attachment. Party we years to order
-                allow asked of.
+                OpenAI is open enough for everyone to use and ask questions as
+                it is asking your friend about anything. It is almost like ask
+                me anything (AMA) and i know the answer to it or i will form the
+                answer based on what i find on the web.
             </p>
 
             <div className="gpt3__header-content__input">

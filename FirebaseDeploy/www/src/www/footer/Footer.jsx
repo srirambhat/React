@@ -14,13 +14,6 @@ export default function Footer() {
         </div> */}
 
             <div className="wsb__footer-links">
-                <div className="wsb__footer-links_logo">
-                    {/* <img src={wsbLogo} alt="wsb_logo" /> */}
-                    {/* <p>
-                    Crechterwoord K12 182 DK Alknjkcb, <br /> All Rights
-                    Reserved
-                </p> */}
-                </div>
                 <div className="wsb__footer-links_div">
                     <h4>Links</h4>
                     <p>Social Media</p>
@@ -37,7 +30,7 @@ export default function Footer() {
                     <h4>Get in touch</h4>
                     <p>Sriram Bhat</p>
                     <p>425-559-0044</p>
-                    <p>sriram68.bhat@outlook.com</p>
+                    <p>sriram.bhat@outlook.com</p>
                 </div>
             </div>
 
