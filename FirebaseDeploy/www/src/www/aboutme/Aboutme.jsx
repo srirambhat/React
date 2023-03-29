@@ -15,11 +15,11 @@ export default function Aboutme() {
                 <h1 className="gradient__text">Sriram Bhat</h1>
                 <p>
                     An accomplished Engineering leader with experience in{' '}
-                    <b>
+                    <b1>
                         Windows OS/Drivers, Networking, AWS Deployment(s),
                         Android Apps Development, Full Stack & Embedded SW
                         development.
-                    </b>
+                    </b1>
                 </p>
                 <p className="tab">- Product development,</p>
                 <p className="tab">- Quality & Speed of Delivery, </p>
