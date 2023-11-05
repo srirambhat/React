@@ -361,13 +361,17 @@ export default function EnhancedTable() {
         <>
           <>
             {console.log("Initial Rows Length: " + arrayOfRows.length)}
-            {arrayOfRows.map((e) => arrayOfRows.pop())}
+            {
+              arrayOfRows.map((e) =>
+                arrayOfRows.pop()
+              ) /* Remove everything from the list */
+            }
             {console.log("New Length: " + arrayOfRows.length)}
             {modelList
               ? modelList.map((model, index) =>
                   arrayOfRows.push(
                     createData(
-                      index, // Index Starts from 0
+                      index /* Add everything back to the list for display */,
                       model.id,
                       model.likes,
                       model.downloads,
