@@ -353,6 +353,12 @@ export default function EnhancedTable() {
     [order, orderBy, page, rowsPerPage]
   );
 
+  function popAllItemsFromArray(arr: rowData[]): void {
+    while (arr.length > 0) {
+      arr.pop();
+    }
+  }
+
   return (
     <>
       {loading ? (
@@ -361,28 +367,27 @@ export default function EnhancedTable() {
         <>
           <>
             {console.log("Initial Rows Length: " + arrayOfRows.length)}
-            {
-              arrayOfRows.map((e) =>
-                arrayOfRows.pop()
-              ) /* Remove everything from the list */
-            }
-            {console.log("New Length: " + arrayOfRows.length)}
+            {popAllItemsFromArray(arrayOfRows)}
+            {console.log("After pop() Length: " + arrayOfRows.length)}
             {modelList
-              ? modelList.map((model, index) =>
+              ? modelList.map((model, index) => {
+                  console.log("Index:" + index + "  Model: " + model);
                   arrayOfRows.push(
                     createData(
-                      index /* Add everything back to the list for display */,
+                      index, // Index Starts from 0
                       model.id,
                       model.likes,
                       model.downloads,
                       model.pipeline_tag
                     )
-                  )
-                )
+                  );
+                })
               : null}
             ;
             <>
-              {console.log("New Arrow of Rows(Length):" + arrayOfRows.length)}
+              {console.log(
+                "Final number of Rows(Length):" + arrayOfRows.length
+              )}
             </>
           </>
           <Box sx={{ width: "100%" }}>
