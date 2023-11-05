@@ -259,7 +259,6 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [modelList, setModelList] = useState<hf_Data[] | null>(null);
   const [loading, setLoading] = useState(true);
-  const [enableDebug, setEnableDebug] = useState(false);
 
   useEffect(() => {
     async function fetchModelList() {
@@ -273,7 +272,6 @@ export default function EnhancedTable() {
         });
         if (response.status === 200) {
           setModelList(response.data);
-          if (enableDebug) console.log("Testing");
         } else {
           console.error(
             `Failed to retrieve model list. Status: ${response.status}`
@@ -363,12 +361,10 @@ export default function EnhancedTable() {
         <>
           <>
             {console.log("Initial Rows Length: " + arrayOfRows.length)}
-            {arrayOfRows.map((e) => {
-              arrayOfRows.pop();
-            })}
+            {arrayOfRows.map((e) => arrayOfRows.pop())}
             {console.log("New Length: " + arrayOfRows.length)}
             {modelList
-              ? modelList.map((model, index) => {
+              ? modelList.map((model, index) =>
                   arrayOfRows.push(
                     createData(
                       index, // Index Starts from 0
@@ -377,12 +373,11 @@ export default function EnhancedTable() {
                       model.downloads,
                       model.pipeline_tag
                     )
-                  );
-                })
+                  )
+                )
               : null}
             ;
             <>
-              if (enableDebug){" "}
               {console.log("New Arrow of Rows(Length):" + arrayOfRows.length)}
             </>
           </>
