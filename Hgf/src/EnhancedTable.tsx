@@ -87,6 +87,7 @@ interface HeadCell {
   label: string;
   numeric: boolean;
 }
+
 const headCells: readonly HeadCell[] = [
   {
     id: "id",
@@ -119,6 +120,7 @@ const headCells: readonly HeadCell[] = [
     label: "Pipeline_Tag",
   },
 ];
+
 interface EnhancedTableProps {
   numSelected: number;
   onRequestSort: (
@@ -192,7 +194,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
           </TableRow>
         </TableHead>
       )}
-      ;
     </>
   );
 }
@@ -259,6 +260,10 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [modelList, setModelList] = useState<hf_Data[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [downloadlimit, setDownloadLimit] = useState<number>(500);
+  //https://huggingface.co/api/models?sort=downloads&direction=-1&limit=1000
+  //https://huggingface.co/api/models?sort=downloads&direction=-1&limit[downloadlimit]=500
+  //https://huggingface.co/api/models?sort=downloads&direction=-1&limit=500
 
   useEffect(() => {
     async function fetchModelList() {
@@ -267,7 +272,7 @@ export default function EnhancedTable() {
           params: {
             sort: "downloads",
             direction: -1,
-            limit: 1000,
+            limit: downloadlimit,
           },
         });
         if (response.status === 200) {
@@ -287,7 +292,7 @@ export default function EnhancedTable() {
       }
     }
     fetchModelList();
-  }, []);
+  }, [downloadlimit]);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -361,6 +366,17 @@ export default function EnhancedTable() {
 
   return (
     <>
+      <select
+        onChange={(e) => {
+          setDownloadLimit(parseInt(e.target.value));
+        }}
+      >
+        <option value={100}>100</option>
+        <option value={500}>500</option>
+        <option value={1000}>1000</option>
+        <option value={5000}>5000</option>
+        <option value={10000}>10000</option>
+      </select>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -383,7 +399,7 @@ export default function EnhancedTable() {
                   );
                 })
               : null}
-            ;
+
             <>
               {console.log(
                 "Final number of Rows(Length):" + arrayOfRows.length
