@@ -22,26 +22,33 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
-import { hf_Data } from "./utils/hf_database";
+import { TaskTypes, hf_Data } from "./utils/hf_database";
 import { rowData } from "./utils/hf_database";
+import '../src/styles.css';
+import AscedionImage from './utils/download.jpg';
 
 const HUGGING_FACE_API_URL = "https://huggingface.co/api/models"; // returns temp2
+
 function createData(
   id: number,
-  model: string,
+  model_name: string,
+  lastModified: string,
   likes: number,
+  private_flag: number,
   downloads: number,
   pipeline_tag: string
-): rowData {
+): rowData { 
   return {
     id,
-    model,
+    model_name,
+    lastModified,
     likes,
+    private_flag,
     downloads,
     pipeline_tag,
   };
 }
-const arrayOfRows = [createData(1, "", 1, 1, "")];
+const arrayOfRows = [createData(1, "", "", 1, 0, 1, "")];
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -81,6 +88,7 @@ function stableSort<T>(
   });
   return stabilizedThis.map((el) => el[0]);
 }
+
 interface HeadCell {
   disablePadding: boolean;
   id: keyof rowData;
@@ -96,16 +104,28 @@ const headCells: readonly HeadCell[] = [
     label: "ID",
   },
   {
-    id: "model",
-    numeric: true,
+    id: "model_name",
+    numeric: false,
     disablePadding: false,
-    label: "Model",
+    label: "Model Name",
+  },
+  {
+    id: "lastModified",
+    numeric: false,
+    disablePadding: false,
+    label: "lastModified",
   },
   {
     id: "likes",
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: "Likes",
+  },
+  {
+    id: "private_flag",
+    numeric: false,
+    disablePadding: false,
+    label: "private_flag",
   },
   {
     id: "downloads",
@@ -143,6 +163,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     onRequestSort,
     loading,
   } = props;
+  
   const createSortHandler =
     (property: keyof rowData) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
@@ -181,6 +202,9 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                   onClick={createSortHandler(headCell.id)}
                 >
                   {headCell.label}
+                  <>
+                  {console.log("Label: " +headCell.label)}
+                  </>
                   {orderBy === headCell.id ? (
                     <Box component="span" sx={visuallyHidden}>
                       {order === "desc"
@@ -202,6 +226,13 @@ interface EnhancedTableToolbarProps {
 }
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const { numSelected } = props;
+  
+  function handleIconClick(): void {    
+      // Handle the click event here
+      console.log('Filter List Icon clicked');
+      // You can perform your filtering logic or other actions here.
+  }
+
   return (
     <Toolbar
       sx={{
@@ -244,13 +275,17 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       ) : (
         <Tooltip title="Filter list">
           <IconButton>
-            <FilterListIcon />
+          <FilterListIcon
+              onClick={handleIconClick}
+              style={{ cursor: 'pointer' }}
+          />
           </IconButton>
         </Tooltip>
       )}
     </Toolbar>
   );
 }
+
 export default function EnhancedTable() {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof rowData>("id");
@@ -259,8 +294,9 @@ export default function EnhancedTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [modelList, setModelList] = useState<hf_Data[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [downloadlimit, setDownloadLimit] = useState<number>(500);
+  const [loading, setLoading] = useState(false);
+  const [downloadlimit, setDownloadLimit] = useState<number>(10);
+  const [selectedTask, setSelectedTask] = useState("all");
   //https://huggingface.co/api/models?sort=downloads&direction=-1&limit=1000
   //https://huggingface.co/api/models?sort=downloads&direction=-1&limit[downloadlimit]=500
   //https://huggingface.co/api/models?sort=downloads&direction=-1&limit=500
@@ -273,10 +309,13 @@ export default function EnhancedTable() {
             sort: "downloads",
             direction: -1,
             limit: downloadlimit,
+            full: "full",
+            ...((selectedTask !== "all") ? { filter: selectedTask } : {}),
           },
         });
         if (response.status === 200) {
           setModelList(response.data);
+          setLoading(true);
         } else {
           console.error(
             `Failed to retrieve model list. Status: ${response.status}`
@@ -292,7 +331,18 @@ export default function EnhancedTable() {
       }
     }
     fetchModelList();
-  }, [downloadlimit]);
+  }, [downloadlimit, rowsPerPage, selectedTask]);
+
+  const labelStyle = {
+    fontWeight: 'bold',
+    
+  };
+
+  function handleChangeSetTaskType(event: React.ChangeEvent<HTMLSelectElement>) {
+    setSelectedTask(event.target.value);
+    setPage(0);
+    setLoading(false);
+  }
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -358,7 +408,7 @@ export default function EnhancedTable() {
     [order, orderBy, page, rowsPerPage]
   );
 
-  function popAllItemsFromArray(arr: rowData[]): void {
+  function popAllItemsFromArray(arr: any[]): void {
     while (arr.length > 0) {
       arr.pop();
     }
@@ -366,17 +416,40 @@ export default function EnhancedTable() {
 
   return (
     <>
-      <select
-        onChange={(e) => {
-          setDownloadLimit(parseInt(e.target.value));
-        }}
-      >
-        <option value={100}>100</option>
-        <option value={500}>500</option>
-        <option value={1000}>1000</option>
-        <option value={5000}>5000</option>
-        <option value={10000}>10000</option>
-      </select>
+      <body className="my-group">
+      <img src={AscedionImage} alt="Ascendion"/>
+      <br/><br/>
+      <label className="my-label" htmlFor="downloadLimitSelect" style={labelStyle}>Select a Number to download:</label>
+      <span>
+        <div>
+          <select className="my-select"
+            id="downloadLimitSelect"
+            style={{marginRight: '20px'}}
+            onChange={(e) => {
+              setDownloadLimit(parseInt(e.target.value));
+              setLoading(false);
+            }}
+          >
+            <option value={100}>100</option>
+            <option value={500}>500</option>
+            <option value={1000}>1000</option>
+            <option value={5000}>5000</option>
+            <option value={10000}>10000</option>
+            <option value={20000}>20000</option>
+          </select>
+              <select className="my-select" style={{marginRight: '20px'}} value={selectedTask} onChange={handleChangeSetTaskType}>
+                  {TaskTypes.map((item) => (
+                      <option key={item} value={item}>
+                            {item}
+                        </option>
+                  ))}
+                  </select>
+          <FormControlLabel
+                control={<Switch checked={dense} onChange={handleChangeDense} />}
+                label="Dense padding"
+              />
+              </div>
+        </span>
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -385,21 +458,33 @@ export default function EnhancedTable() {
             {console.log("Initial Rows Length: " + arrayOfRows.length)}
             {popAllItemsFromArray(arrayOfRows)}
             {console.log("After pop() Length: " + arrayOfRows.length)}
+            {console.log("Initial Array of Task Types: " + TaskTypes.length)}
             {modelList
               ? modelList.map((model, index) => {
-                  console.log("Index:" + index + "  Model: " + model);
+                  //console.log("Index:" + index + "  Model: " + model.pipeline_tag);
                   arrayOfRows.push(
                     createData(
                       index, // Index Starts from 0
                       model.id,
+                      model.lastModified,
                       model.likes,
+                      model.private_flag,
                       model.downloads,
                       model.pipeline_tag
                     )
                   );
+                
+                  let len;
+                  if ((model.pipeline_tag) ? (len = model.pipeline_tag) : (len=0))
+
+                  if ((!TaskTypes.includes(model.pipeline_tag)) && len) {
+                    TaskTypes.push(model.pipeline_tag);
+                    console.log("Task Type Add: " + model.pipeline_tag);
+                  }
+
                 })
               : null}
-
+              
             <>
               {console.log(
                 "Final number of Rows(Length):" + arrayOfRows.length
@@ -426,6 +511,8 @@ export default function EnhancedTable() {
                   />
                   <TableBody>
                     {visibleRows.map((row, index) => {
+                                        <>{console.log("In Here")}
+                                        </>
                       const isItemSelected = isSelected(row.id);
                       const labelId = `enhanced-table-checkbox-${index}`;
                       return (
@@ -456,12 +543,12 @@ export default function EnhancedTable() {
                           >
                             {row.id}
                           </TableCell>
-                          <TableCell align="right">{row.model}</TableCell>
-                          <TableCell align="right">{row.likes}</TableCell>
+                          <TableCell align="left">{row.model_name}</TableCell>
+                          <TableCell align="left">{row.lastModified}</TableCell>
+                          <TableCell align="left">{row.likes}</TableCell>
+                          <TableCell align="left">{row.private_flag ? "true" : "false"}</TableCell>
                           <TableCell align="right">{row.downloads}</TableCell>
-                          <TableCell align="right">
-                            {row.pipeline_tag}
-                          </TableCell>
+                          <TableCell align="right">{row.pipeline_tag}</TableCell>
                         </TableRow>
                       );
                     })}
@@ -487,13 +574,10 @@ export default function EnhancedTable() {
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
             </Paper>
-            <FormControlLabel
-              control={<Switch checked={dense} onChange={handleChangeDense} />}
-              label="Dense padding"
-            />
           </Box>
         </>
       )}
+      </body>
     </>
   );
 }
