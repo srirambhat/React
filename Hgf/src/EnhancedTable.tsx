@@ -19,13 +19,13 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { TaskTypes, hf_Data } from "./utils/hf_database";
 import { rowData } from "./utils/hf_database";
 import '../src/styles.css';
-import AscedionImage from './utils/download.jpg';
+import AscedionImage from '../src/utils/download.jpg';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const HUGGING_FACE_API_URL = "https://huggingface.co/api/models"; // returns temp2
 
@@ -267,9 +267,9 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         </Typography>
       )}
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
+        <Tooltip title="Expand More">
           <IconButton>
-            <DeleteIcon />
+            <ExpandMoreIcon />
           </IconButton>
         </Tooltip>
       ) : (
@@ -290,13 +290,14 @@ export default function EnhancedTable() {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof rowData>("id");
   const [selected, setSelected] = React.useState<readonly number[]>([]);
-  const [page, setPage] = React.useState(0);
+  const [onPage, setOnPage] = React.useState(1);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(25);
-  const [modelList, setModelList] = useState<hf_Data[] | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [downloadlimit, setDownloadLimit] = useState<number>(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [listOfModels, setListOfModels] = React.useState<hf_Data[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [downloadlimit, setDownloadLimit] = useState<number>(20000);
   const [selectedTask, setSelectedTask] = useState("all");
+  //const [ visibleRows, setVisibleRows] = useState<rowData[] | null>(null);
   //https://huggingface.co/api/models?sort=downloads&direction=-1&limit=1000
   //https://huggingface.co/api/models?sort=downloads&direction=-1&limit[downloadlimit]=500
   //https://huggingface.co/api/models?sort=downloads&direction=-1&limit=500
@@ -314,8 +315,8 @@ export default function EnhancedTable() {
           },
         });
         if (response.status === 200) {
-          setModelList(response.data);
-          setLoading(true);
+          createRowsOfData(response.data);
+
         } else {
           console.error(
             `Failed to retrieve model list. Status: ${response.status}`
@@ -328,6 +329,7 @@ export default function EnhancedTable() {
         );
       } finally {
         setLoading(false);
+        setOnPage(0);
       }
     }
     fetchModelList();
@@ -338,10 +340,65 @@ export default function EnhancedTable() {
     
   };
 
-  function handleChangeSetTaskType(event: React.ChangeEvent<HTMLSelectElement>) {
+  function createRowsOfData(mList : hf_Data[])
+  {
+    setListOfModels(mList);  // Store the info in the list.
+    console.log("Initial Rows Length: " + arrayOfRows.length);
+    popAllItemsFromArray(arrayOfRows);
+    console.log("After pop() Length: " + arrayOfRows.length);
+    console.log("Initial Array of Task Types: " + TaskTypes.length);
+    if (mList) {
+      mList.map((model, index) => {
+          //console.log("Index:" + index + "  Model: " + model.pipeline_tag);
+          arrayOfRows.push(
+            createData(
+              index, // Index Starts from 0
+              model.id,
+              model.lastModified,
+              model.likes,
+              model.private_flag,
+              model.downloads,
+              model.pipeline_tag
+            )
+          );
+        
+          let len;
+          if ((model.pipeline_tag) ? (len = model.pipeline_tag) : (len=0))
+
+          if ((!TaskTypes.includes(model.pipeline_tag)) && len) {
+            TaskTypes.push(model.pipeline_tag);
+            console.log("Task Type Add: " + model.pipeline_tag);
+          }
+
+        });
+        console.log(
+          "Final number of Rows(Length):" + arrayOfRows.length
+        );
+      } else {
+        console.log("ModelList Empty");
+      }
+
+      
+  }
+
+  function handleDisplayToggle()
+  {
+    let newPage = 0;
+    
+    console.log("Before Page Setting: " +onPage);
+
+    // Toggle the page for display purposes
+    newPage = (onPage) ? 0 : 1;
+    setOnPage(newPage); // if it is on 0, then set it to 1
+    console.log("setting new page: "+newPage);
+  }
+
+  function handleChangeSetTaskType(event: React.ChangeEvent<HTMLSelectElement>) 
+  {
+    console.log("Handle Changes Set Task type: "+event.target.value);
     setSelectedTask(event.target.value);
-    setPage(0);
-    setLoading(false);
+    handleDisplayToggle();
+    setLoading(true);
   }
 
   const handleRequestSort = (
@@ -381,14 +438,16 @@ export default function EnhancedTable() {
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
+    setOnPage(newPage);
   };
+
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setOnPage(0);
   };
+
   const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDense(event.target.checked);
   };
@@ -397,16 +456,28 @@ export default function EnhancedTable() {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - arrayOfRows.length) : 0;
+    onPage > 0 ? Math.max(0, (1 + onPage) * rowsPerPage - arrayOfRows.length) : 0;
 
   const visibleRows = React.useMemo(
     () =>
       stableSort(arrayOfRows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
+        onPage * rowsPerPage,
+        onPage * rowsPerPage + rowsPerPage
       ),
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, onPage, rowsPerPage]
   );
+
+  /* 
+  useEffect(() => {
+    setVisibleRows(stableSort(arrayOfRows, getComparator(order, orderBy)).slice(
+      onPage * rowsPerPage,
+      onPage * rowsPerPage + rowsPerPage
+    ));
+
+    console.log("visibleRows(len): " + visibleRows?.length);
+
+  }, [ order, orderBy, onPage, rowsPerPage])
+  */
 
   function popAllItemsFromArray(arr: any[]): void {
     while (arr.length > 0) {
@@ -427,7 +498,7 @@ export default function EnhancedTable() {
             style={{marginRight: '20px'}}
             onChange={(e) => {
               setDownloadLimit(parseInt(e.target.value));
-              setLoading(false);
+              setLoading(true);
             }}
           >
             <option value={100}>100</option>
@@ -437,13 +508,13 @@ export default function EnhancedTable() {
             <option value={10000}>10000</option>
             <option value={20000}>20000</option>
           </select>
-              <select className="my-select" style={{marginRight: '20px'}} value={selectedTask} onChange={handleChangeSetTaskType}>
+          <select className="my-select" style={{marginRight: '20px'}} value={selectedTask} onChange={handleChangeSetTaskType}>
                   {TaskTypes.map((item) => (
                       <option key={item} value={item}>
                             {item}
                         </option>
                   ))}
-                  </select>
+          </select>
           <FormControlLabel
                 control={<Switch checked={dense} onChange={handleChangeDense} />}
                 label="Dense padding"
@@ -451,46 +522,12 @@ export default function EnhancedTable() {
               </div>
         </span>
       {loading ? (
-        <p>Loading...</p>
+        <>
+        <p className="blink_text">Loading...</p>
+        {console.log("Loading...." +loading)}
+        </>
       ) : (
         <>
-          <>
-            {console.log("Initial Rows Length: " + arrayOfRows.length)}
-            {popAllItemsFromArray(arrayOfRows)}
-            {console.log("After pop() Length: " + arrayOfRows.length)}
-            {console.log("Initial Array of Task Types: " + TaskTypes.length)}
-            {modelList
-              ? modelList.map((model, index) => {
-                  //console.log("Index:" + index + "  Model: " + model.pipeline_tag);
-                  arrayOfRows.push(
-                    createData(
-                      index, // Index Starts from 0
-                      model.id,
-                      model.lastModified,
-                      model.likes,
-                      model.private_flag,
-                      model.downloads,
-                      model.pipeline_tag
-                    )
-                  );
-                
-                  let len;
-                  if ((model.pipeline_tag) ? (len = model.pipeline_tag) : (len=0))
-
-                  if ((!TaskTypes.includes(model.pipeline_tag)) && len) {
-                    TaskTypes.push(model.pipeline_tag);
-                    console.log("Task Type Add: " + model.pipeline_tag);
-                  }
-
-                })
-              : null}
-              
-            <>
-              {console.log(
-                "Final number of Rows(Length):" + arrayOfRows.length
-              )}
-            </>
-          </>
           <Box sx={{ width: "100%" }}>
             <Paper sx={{ width: "100%", mb: 2 }}>
               <EnhancedTableToolbar numSelected={selected.length} />
@@ -510,9 +547,13 @@ export default function EnhancedTable() {
                     loading={loading}
                   />
                   <TableBody>
+                  <>
+                  {console.log("In Here arrayofRows(Len): " +arrayOfRows.length +" orderBy: " +orderBy +" order:" +order + " Rows/Page: " +rowsPerPage + " onPage: " +onPage)}
+                  </>
                     {visibleRows.map((row, index) => {
-                                        <>{console.log("In Here")}
-                                        </>
+                      <>
+                      {console.log("Index: " +index +" row: " +row)}
+                      </>        
                       const isItemSelected = isSelected(row.id);
                       const labelId = `enhanced-table-checkbox-${index}`;
                       return (
@@ -569,7 +610,7 @@ export default function EnhancedTable() {
                 component="div"
                 count={arrayOfRows.length}
                 rowsPerPage={rowsPerPage}
-                page={page}
+                page={onPage}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
