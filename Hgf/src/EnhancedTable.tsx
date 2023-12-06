@@ -221,15 +221,17 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     </>
   );
 }
+
 interface EnhancedTableToolbarProps {
   numSelected: number;
 }
+
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const { numSelected } = props;
   
   function handleIconClick(): void {    
       // Handle the click event here
-      console.log('Filter List Icon clicked');
+      console.log('Filter List Icon clicked' +numSelected);
       // You can perform your filtering logic or other actions here.
   }
 
